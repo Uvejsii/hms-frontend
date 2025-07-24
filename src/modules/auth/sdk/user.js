@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import {computed, ref} from 'vue'
 
 const user = ref(JSON.parse(localStorage.getItem('hmsUser')))
 
@@ -12,7 +12,7 @@ const logout = async (router) => {
     }
 }
 
-const isUserLoggedIn = () => !!user.value?.token
+const isUserLoggedIn = computed(() => !!user.value?.token);
 
 export const useUser = () => {
     return { user, logout, isUserLoggedIn }

@@ -28,7 +28,7 @@ const queryClient = useQueryClient()
 const { mutate, isPending } = useMutation({
   mutationFn: () => deleteDoctorReview(values),
   onSuccess: () => {
-    queryClient.invalidateQueries(['doctor', props.data.id])
+    queryClient.invalidateQueries(props.data.drKey)
     emit('close', values)
     toast.add({
       severity: 'success',

@@ -11,23 +11,22 @@ const { user } = useUser()
 
 const showAddReviewPopup = inject('showAddDoctorReviewPopup')
 const addReview = (data) => {
-  showAddReviewPopup(data)
+  showAddReviewPopup({...data, drKey: props.data.drKey})
 }
 
 const showEditDoctorReviewPopup = inject('showEditDoctorReviewPopup')
 const editReview = (data) => {
-  showEditDoctorReviewPopup(data)
+  showEditDoctorReviewPopup({...data, drKey: props.data.drKey})
 }
 
 const showDeleteDoctorReviewPopup = inject('showDeleteDoctorReviewPopup')
 const deleteReview = (data) => {
-  showDeleteDoctorReviewPopup(data)
+  showDeleteDoctorReviewPopup({...data, drKey: props.data.drKey})
 }
 </script>
 
 <template>
   <div class="reviews-content">
-    <div>
       <div class="reviews-summary">
         <div class="rating-breakdown">
           <div class="overall-rating">
@@ -54,18 +53,19 @@ const deleteReview = (data) => {
             </div>
             <Rating :modelValue="review.stars" readonly :cancel="false" />
           </div>
-          <p class="review-text">{{ review.comment }}</p>
-          <ActionMenu v-if="user?.id === review.reviewer?.id">
-            <ActionMenuItem @click="editReview(review)">
-              <EditPencil/>Edit
-            </ActionMenuItem>
-            <ActionMenuItem severity="danger" @click="deleteReview(review)">
-              <Trash/> Delete
-            </ActionMenuItem>
-          </ActionMenu>
+          <div class="d-flex justify-content-between">
+            <p class="review-text">{{ review.comment }}</p>
+            <ActionMenu v-if="user?.id === review.reviewer?.id">
+              <ActionMenuItem @click="editReview(review)">
+                <EditPencil/>Edit
+              </ActionMenuItem>
+              <ActionMenuItem severity="danger" @click="deleteReview(review)">
+                <Trash/> Delete
+              </ActionMenuItem>
+            </ActionMenu>
+          </div>
         </div>
       </div>
-    </div>
   </div>
 </template>
 

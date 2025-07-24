@@ -48,11 +48,11 @@ const queryClient = useQueryClient()
 const { mutate, isPending } = useMutation({
   mutationFn: () => editDoctorReview(values),
   onSuccess: () => {
-    queryClient.invalidateQueries(['doctor', props.data.id])
+    queryClient.invalidateQueries(props.data.drKey)
     emit('close', values)
     toast.add({
       severity: 'success',
-      summary: 'Review added Successfully',
+      summary: 'Review updated Successfully',
       life: 5000
     })
   },

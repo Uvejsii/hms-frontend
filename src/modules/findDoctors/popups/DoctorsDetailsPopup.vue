@@ -1,5 +1,5 @@
 <script setup>
-import {inject, ref} from "vue";
+import {computed, inject, ref} from "vue";
 import DoctorDetailsOverviewTab
   from "@/modules/findDoctors/components/doctor-details-popup-tabs/DoctorDetailsOverviewTab.vue";
 import DoctorDetailsAvailabilityTab
@@ -7,35 +7,34 @@ import DoctorDetailsAvailabilityTab
 import DoctorDetailsReviewsTab
   from "@/modules/findDoctors/components/doctor-details-popup-tabs/DoctorDetailsReviewsTab.vue";
 import {CalendarPlus} from "@iconoir/vue";
+import {useQuery} from "@tanstack/vue-query";
+import {getDoctorById} from "@/modules/findDoctors/sdk/api.js";
 
 const emit = defineEmits(['close'])
 const props = defineProps(['data'])
 const visible = ref(true)
+
+const drDataKey = computed(() => ['doctorDetails', props.data.id])
+const { data: drData, isLoading: isDrByIdLoading } = useQuery({
+  queryKey: drDataKey,
+  queryFn: () => getDoctorById(props.data.id),
+})
 
 const tabs = [
   {
     name: 'overview',
     label: 'Overview',
     component: DoctorDetailsOverviewTab,
-    props: {
-      data: props.data
-    }
   },
   {
     name: 'availability',
     label: 'Availability',
     component: DoctorDetailsAvailabilityTab,
-    props: {
-      data: props.data
-    }
   },
   {
     name: 'reviews',
     label: 'Reviews',
     component: DoctorDetailsReviewsTab,
-    props: {
-      data: {...props.data},
-    }
   }
 ]
 
@@ -52,22 +51,26 @@ const cancel = () => {
 </script>
 
 <template>
+  <div v-if="isDrByIdLoading">
+    Loading...
+  </div>
   <Dialog
+      v-else
       style="width: 768px"
       @hide="cancel"
-      :header="`Dr. ${props.data.firstName} ${props.data.lastName}'s details`"
+      :header="`Dr. ${drData.firstName} ${drData.lastName}'s details`"
       :draggable="false"
       v-model:visible="visible"
       modal
   >
     <div class="doctor-profile-header">
-      <img :src="props.data.imageFilePath" :alt="props.data.name" class="profile-image" />
+      <img :src="drData.imageFilePath" :alt="drData.name" class="profile-image" />
       <div class="profile-info">
-        <h2>{{ props.data.firstName }} {{ props.data.lastName }}</h2>
-        <p class="specialty">{{ props.data.departament.name }}</p>
+        <h2>{{ drData.firstName }} {{ drData.lastName }}</h2>
+        <p class="specialty">{{ drData.departament.name }}</p>
         <div class="rating-section">
-          <Rating :modelValue="props.data.reviewStarAverage" readonly :cancel="false" />
-          <span class="rating-details">{{ props.data.reviewStarAverage }}/5 ({{ props.data.totalReviewsCount }} reviews)</span>
+          <Rating :modelValue="drData.reviewStarAverage" readonly :cancel="false" />
+          <span class="rating-details">{{ drData.reviewStarAverage }}/5 ({{ drData.totalReviewsCount }} reviews)</span>
         </div>
       </div>
     </div>
@@ -79,13 +82,16 @@ const cancel = () => {
         </TabList>
         <TabPanels>
           <TabPanel v-for="tab in tabs" :key="tab.name" :value="tab.name">
-            <component :is="tab.component" v-bind="tab.props" />
+            <component
+                :is="tab.component"
+                :data="{ ...drData, isLoading: isDrByIdLoading, drKey: drDataKey }"
+            />
           </TabPanel>
         </TabPanels>
     </Tabs>
     <template #footer>
       <Button @click="cancel" severity="secondary" outlined>Close</Button>
-      <Button @click="bookAppointment(props.data)"><CalendarPlus/> Book appointment</Button>
+      <Button @click="bookAppointment(drData)"><CalendarPlus/> Book appointment</Button>
     </template>
   </Dialog>
 </template>

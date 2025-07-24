@@ -23,8 +23,21 @@ const { validate, errors, values, setFieldValue } = useForm({
   validationSchema: yup.object({
     date: yup.date().required('Date is required'),
     notes: yup.string().required('Notes is required'),
-    startTime: yup.string().required('Start time is required'),
-    endTime: yup.string().required('End time required'),
+    startTime: yup
+        .string()
+        .required('Start time is required'),
+    endTime: yup
+        .string()
+        .required('End time is required')
+        .test('is-30min-after-start', 'End time must be exactly 30 minutes after start time', function (endTime) {
+          const { startTime } = this.parent;
+          if (!startTime || !endTime) return true;
+
+          const start = moment(startTime);
+          const end = moment(endTime);
+
+          return end.diff(start, 'minutes') === 30;
+        }),
     price: yup.number().required('Price is required'),
     contactPhoneNumber: yup.string().required('Phone number is required'),
     doctorId: yup.number().required('Doctor is required'),
@@ -127,7 +140,7 @@ const queryClient = useQueryClient()
 const { mutate, isPending } = useMutation({
   mutationFn: () => bookAppointment(values),
   onSuccess: () => {
-    queryClient.invalidateQueries(['doctorAvailability', props.data.id])
+    queryClient.invalidateQueries(drAvailabilityKey.value)
     emit('close', values)
     toast.add({
       severity: 'success',

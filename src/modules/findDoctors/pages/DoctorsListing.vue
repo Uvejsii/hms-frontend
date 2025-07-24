@@ -1,11 +1,8 @@
 <script setup>
-import {ref, computed, onMounted, inject} from 'vue'
-import { useToast } from 'primevue/usetoast'
+import {ref, computed, inject} from 'vue'
 import { Search, Circle, City, Clock, MapPin, Language, Calendar as CalendarIcon, User, CalendarPlus, ViewGrid, List } from "@iconoir/vue";
 import {useQuery} from "@tanstack/vue-query";
 import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
-
-const toast = useToast()
 
 // State
 const searchQuery = ref('')
@@ -14,14 +11,6 @@ const selectedAvailability = ref(null)
 const selectedExperience = ref(null)
 const selectedRating = ref(null)
 const viewMode = ref('grid')
-const showDoctorDialog = ref(false)
-const selectedDoctor = ref(null)
-const showBookingDialog = ref(false)
-const bookingDoctor = ref(null)
-const bookingDate = ref(null)
-const bookingTime = ref(null)
-const bookingReason = ref('')
-const bookingPhone = ref('')
 
 const { data, isLoading: doctorsLoading} = useQuery({
   queryKey: ['doctors'],
@@ -105,49 +94,6 @@ if (selectedAvailability.value !== null) {
   return filtered
 })
 
-const availableTimeSlots = computed(() => {
-  if (!bookingDoctor.value) return []
-  return bookingDoctor.value.nextSlots || []
-})
-
-// Methods
-const showDoctorDetails = (doctor) => {
-  selectedDoctor.value = doctor
-  showDoctorDialog.value = true
-}
-
-const bookAppointment = (doctor) => {
-  bookingDoctor.value = doctor
-  showBookingDialog.value = true
-  showDoctorDialog.value = false
-}
-
-const confirmBooking = () => {
-  if (!bookingDate.value || !bookingTime.value || !bookingReason.value) {
-    toast.add({
-      severity: 'warn',
-      summary: 'Missing Information',
-      detail: 'Please fill in all required fields',
-      life: 3000
-    })
-    return
-  }
-
-  toast.add({
-    severity: 'success',
-    summary: 'Appointment Booked',
-    detail: `Your appointment with ${bookingDoctor.value.name} has been scheduled`,
-    life: 5000
-  })
-
-  // Reset form
-  showBookingDialog.value = false
-  bookingDate.value = null
-  bookingTime.value = null
-  bookingReason.value = ''
-  bookingPhone.value = ''
-}
-
 const clearFilters = () => {
   searchQuery.value = ''
   selectedDepartment.value = null
@@ -159,6 +105,11 @@ const clearFilters = () => {
 const showDoctorDetailsPopup = inject('showDoctorDetailsPopup')
 const viewDoctorDetails = (doctor) => {
   showDoctorDetailsPopup(doctor)
+}
+
+const showBookAppointmentPopup = inject('showBookAppointmentPopup')
+const bookAppointment = (data) => {
+  showBookAppointmentPopup({...data})
 }
 </script>
 
@@ -265,9 +216,8 @@ const viewDoctorDetails = (doctor) => {
           v-for="doctor in filteredDoctors"
           :key="doctor.id"
           class="doctor-card"
-          @click="showDoctorDetails(doctor)"
+          @click="viewDoctorDetails(doctor)"
       >
-        <Button @click="viewDoctorDetails(doctor)" />
         <div class="doctor-image">
           <img :src="doctor.imageFilePath" :alt="doctor.name" />
           <div class="availability-badge" :class="doctor.isAvailable ? 'available' : 'unavailable'">
@@ -308,13 +258,13 @@ const viewDoctorDetails = (doctor) => {
           <div class="doctor-actions">
             <Button
                 class="p-button-outlined"
-                @click.stop="showDoctorDetails(doctor)"
+                @click="viewDoctorDetails(doctor)"
             >
               <User /> View Profile
             </Button>
             <Button
                 @click.stop="bookAppointment(doctor)"
-                :disabled="doctor.isAvailable === false"
+                :disabled="doctor?.isAvailable === false"
             >
               <CalendarPlus /> Book
             </Button>
@@ -328,55 +278,6 @@ const viewDoctorDetails = (doctor) => {
       <p>Try adjusting your search criteria or filters</p>
       <Button label="Clear Filters" @click="clearFilters" class="p-button-outlined" />
     </div>
-
-    <Dialog
-        v-model:visible="showBookingDialog"
-        header="Book Appointment"
-        modal
-        style="width: 40rem"
-    >
-      <div v-if="bookingDoctor" class="booking-form">
-        <div class="booking-doctor-info">
-          <img :src="bookingDoctor.imageFilePath" :alt="bookingDoctor.name" class="booking-doctor-image" />
-          <div>
-            <h4>{{ bookingDoctor.name }}</h4>
-            <p>{{ bookingDoctor.specialty }}</p>
-            <p class="consultation-fee">Consultation Fee: ${{ bookingDoctor.consultationFee }}</p>
-          </div>
-        </div>
-
-        <div class="booking-fields">
-          <div class="form-group">
-            <label>Appointment Date</label>
-            <DatePicker v-model="bookingDate" dateFormat="mm/dd/yy" :minDate="new Date()" />
-          </div>
-
-          <div class="form-group">
-            <label>Preferred Time</label>
-            <Dropdown
-                v-model="bookingTime"
-                :options="availableTimeSlots"
-                placeholder="Select time slot"
-            />
-          </div>
-
-          <div class="form-group">
-            <label>Reason for Visit</label>
-            <Textarea v-model="bookingReason" rows="3" placeholder="Describe your symptoms or reason for consultation..." />
-          </div>
-
-          <div class="form-group">
-            <label>Contact Information</label>
-            <InputText v-model="bookingPhone" placeholder="Phone number" />
-          </div>
-        </div>
-
-        <div class="booking-actions">
-          <Button label="Cancel" class="p-button-outlined" @click="showBookingDialog = false" />
-          <Button label="Confirm Booking" @click="confirmBooking" />
-        </div>
-      </div>
-    </Dialog>
   </div>
 </template>
 

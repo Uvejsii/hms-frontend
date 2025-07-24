@@ -26,11 +26,16 @@ const router = createRouter({
       name: 'profile',
       component: () => import('@/modules/profile/pages/ProfilePage.vue'),
     },
+    {
+      path: '/patient-appointments',
+      name: 'patient-appointments',
+      component: () => import('@/modules/patientBookings/pages/PatientBookingsListing.vue'),
+    },
   ],
 })
 
 router.beforeEach((to, from, next) => {
-  if (!isUserLoggedIn() && to.name !== 'login' && to.name !== 'register') {
+  if (!isUserLoggedIn && to.name !== 'login' && to.name !== 'register') {
     next({ name: 'login' })
   } else {
     next()

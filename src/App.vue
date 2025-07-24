@@ -5,6 +5,9 @@ import Popups from "@/components/popups/Popups.vue";
 import {VueQueryDevtools} from "@tanstack/vue-query-devtools";
 import { IconoirProvider } from '@iconoir/vue'
 import Header from "@/components/Header.vue";
+import {useUser} from "@/modules/auth/sdk/user.js";
+
+const { isUserLoggedIn } = useUser();
 </script>
 
 <template>
@@ -12,7 +15,7 @@ import Header from "@/components/Header.vue";
     <Popups>
         <VueQueryDevtools />
         <Toast/>
-        <Header />
+        <Header v-if="isUserLoggedIn" />
         <div class="container-fluid my-3">
           <RouterView />
         </div>

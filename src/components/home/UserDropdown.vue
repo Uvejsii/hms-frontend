@@ -1,12 +1,16 @@
 <script setup>
 import ActionMenu from "@/components/ActionMenu.vue";
-import {LogOut, User} from "@iconoir/vue";
+import {LogOut, User, Calendar} from "@iconoir/vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
 import { useUser } from "@/modules/auth/sdk/user.js";
 import {useRouter} from "vue-router";
 
 const router = useRouter();
 const { user, logout } = useUser()
+
+const goToAppointments = () => {
+  router.push({ name: 'patient-appointments' })
+}
 </script>
 
 <template>
@@ -25,8 +29,11 @@ const { user, logout } = useUser()
 <!--    <ActionMenuItem as="router-link" :to="{ name: 'profile' }">-->
 <!--      <User height="20" /> My Profile-->
 <!--    </ActionMenuItem>-->
+    <ActionMenuItem @click="goToAppointments()">
+      <Calendar /> Appointments
+    </ActionMenuItem>
     <ActionMenuItem severity="danger" @click="logout(router)">
-      <LogOut height="20" /> Logout
+      <LogOut /> Logout
     </ActionMenuItem>
   </ActionMenu>
 </template>

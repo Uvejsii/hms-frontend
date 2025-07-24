@@ -5,38 +5,40 @@ const props = defineProps(["data"]);
 <template>
   <div class="wrapper">
     <div class="overview-content">
-      <div class="info-grid">
-        <div class="info-item">
-          <strong>Department:</strong>
-          <span>{{ props.data.departament.name }}</span>
+      <div v-if="props.data.isLoading">Loading...</div>
+      <div v-else>
+        <div class="info-grid">
+          <div class="info-item">
+            <strong>Department:</strong>
+            <span>{{ props.data.departament.name }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Experience:</strong>
+            <span>{{ props.data.yearsOfExperience }} years</span>
+          </div>
+          <div class="info-item">
+            <strong>Languages:</strong>
+            <span>{{ props.data.languages }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Location:</strong>
+            <span>{{ props.data.departament.location }}</span>
+          </div>
+          <div class="info-item">
+            <strong>Consultation Fee:</strong>
+            <span>{{ props.data.consultationFee }}&euro;</span>
+          </div>
         </div>
-        <div class="info-item">
-          <strong>Experience:</strong>
-          <span>{{ props.data.yearsOfExperience }} years</span>
+        <div class="bio-section">
+          <h4>About Dr. {{ props.data.firstName }} {{ props.data.lastName }}</h4>
+          <p>
+            Dr. {{ props.data.lastName }} is a skilled specialist in the field of {{ props.data.departament.name }},
+            bringing {{ props.data.yearsOfExperience }} years of experience in delivering quality care to patients.
+            Fluent in {{ props.data.languages }}, Dr. {{ props.data.lastName }} ensures clear and supportive
+            communication with individuals from diverse backgrounds. You can find Dr. {{ props.data.lastName }} at
+            {{ props.data.departament.location }}, offering consultations at an affordable fee of {{props .data.consultationFee }}&euro;.
+          </p>
         </div>
-        <div class="info-item">
-          <strong>Languages:</strong>
-          <span>{{ props.data.languages }}</span>
-        </div>
-        <div class="info-item">
-          <strong>Location:</strong>
-          <span>{{ props.data.departament.location }}</span>
-        </div>
-        <div class="info-item">
-          <strong>Consultation Fee:</strong>
-          <span>{{ props.data.consultationFee }}&euro;</span>
-        </div>
-      </div>
-
-      <div class="bio-section">
-        <h4>About Dr. {{ props.data.firstName }} {{ props.data.lastName }}</h4>
-        <p>
-          Dr. {{ props.data.lastName }} is a skilled specialist in the field of {{ props.data.departament.name }},
-          bringing {{ props.data.yearsOfExperience }} years of experience in delivering quality care to patients.
-          Fluent in {{ props.data.languages }}, Dr. {{ props.data.lastName }} ensures clear and supportive
-          communication with individuals from diverse backgrounds. You can find Dr. {{ props.data.lastName }} at
-          {{ props.data.departament.location }}, offering consultations at an affordable fee of {{props .data.consultationFee }}&euro;.
-        </p>
       </div>
     </div>
   </div>

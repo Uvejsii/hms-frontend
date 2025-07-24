@@ -19,22 +19,22 @@ export const getDoctors = async () => {
 }
 
 /**
- * Get doctor reviews by doctor ID
+ * Get doctor by ID
  *
- * @param {Number} doctorId
+ * @param {Number} id
  *
- * @returns {Promise<Array>} - Array of reviews for the specified doctor
+ * @returns {Promise<Object>} - Object of doctor details
  *
  * @throws {Error} - When the response status is not 200
  */
 
-export const getDoctorReviewsByDrId = async (doctorId) => {
+export const getDoctorById = async (id) => {
     try {
-        return await api.get(`${domain}/DoctorReview/GetDoctorReviewsByDrId`, {
-            params: { doctorId }
+        return await api.get(`${domain}/Doctors/GetDoctorById`, {
+            params: { id }
         })
     } catch (error) {
-        throw new Error(`Error getting reviews for doctor: ${error}`)
+        throw new Error(`Error getting doctors: ${error}`)
     }
 }
 
