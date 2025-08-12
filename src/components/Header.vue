@@ -110,7 +110,7 @@ onUnmounted(() => {
           @click="$emit('toggle-sidebar')"
       />
       <div class="page-title">
-        <h1>Find doctors</h1>
+        <h1><RouterLink to="/" class="text-decoration-none text-black">Find doctors</RouterLink></h1>
       </div>
     </div>
 

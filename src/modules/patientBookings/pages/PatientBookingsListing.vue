@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { getBookingsByUserId } from "@/modules/patientBookings/sdk/api.js";
 import { useQuery } from "@tanstack/vue-query";
 import { useUser } from "@/modules/auth/sdk/user.js";
@@ -9,6 +9,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Loading from "@/components/Loading.vue";
 import { formatDateTo24Hour } from "@/utils/helpers.js";
+import moment from "moment";
 
 const { user } = useUser();
 const statusColors = {
@@ -27,12 +28,31 @@ const getStatusLabel = (status) => {
     3: 'Finished',
     4: 'Cancelled',
   };
-  return labels[status] || 'Unknown';  // Return 'Unknown' if status is not in the map
+  return labels[status] || 'Unknown';
 };
 
 const { data, isLoading } = useQuery({
   queryKey: ['patientBookings', user.value?.id],
   queryFn: () => getBookingsByUserId(user.value?.id),
+});
+
+const todayAppointments = computed(() => {
+  if (data?.value) {
+    return data.value.filter(booking => {
+      return moment(booking.startTime).isSame(moment(), 'day');
+    });
+  }
+  return [];
+});
+
+// Filter appointments for this month
+const monthAppointments = computed(() => {
+  if (data?.value) {
+    return data.value.filter(booking => {
+      return moment(booking.startTime).isSame(moment(), 'month');
+    });
+  }
+  return [];
 });
 
 // Transform bookings data to FullCalendar format
@@ -42,11 +62,15 @@ const events = computed(() => {
       title: booking.notes || 'No Notes',
       start: booking.startTime,
       end: booking.endTime,
-      status: booking.status,  // Status is now a number
+      status: booking.status,
       description: booking.notes,
       extendedProps: {
         doctor: `Dr. ${booking.doctor.firstName} ${booking.doctor.lastName}`,
         phone: booking.contactPhoneNumber,
+        tooltipHtml: `<strong>Appointment Notes:</strong> ${booking.notes || 'N/A'}<br>
+      <strong>Phone:</strong> ${booking.contactPhoneNumber || 'N/A'}<br>
+      <strong>Price:</strong> ${booking.price || 'N/A'}€
+    `
       },
     }));
   }
@@ -57,10 +81,8 @@ const events = computed(() => {
 const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
-  events: events.value, // Bind the transformed events to FullCalendar
-  eventClick: function (info) {
-    alert(`Event clicked: ${info.event.title}`);
-  },
+  events: events.value,
+  dayMaxEventRows: true,
 }));
 </script>
 
@@ -75,6 +97,37 @@ const calendarOptions = computed(() => ({
           <p class="m-0">{{ getStatusLabel(status) }}</p>
         </div>
       </div>
+      <div>
+        <p><strong>Today:</strong></p>
+        <div v-if="todayAppointments.length > 0" class="today-appointments">
+          <ul>
+            <li v-for="(appointment, index) in todayAppointments" :key="index" class="d-flex align-items-center gap-3 border-bottom pb-3">
+              <div
+                  class="calendar-main__left-container__vacation-type__color rounded"
+                  :style="{ backgroundColor: statusColors[appointment.status] }"
+              ></div>
+              From {{ formatDateTo24Hour(appointment.startTime) }} - {{ formatDateTo24Hour(appointment.endTime) }}
+              with Dr. {{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}
+            </li>
+          </ul>
+        </div>
+        <div v-else>No appointments for today</div>
+      </div>
+      <div>
+        <p><strong>This month:</strong></p>
+        <div v-if="monthAppointments.length > 0" class="month-appointments">
+          <ul>
+            <li v-for="(appointment, index) in monthAppointments" :key="index" class="d-flex align-items-center gap-3 border-bottom pb-3">
+              <div
+                  class="calendar-main__left-container__vacation-type__color rounded"
+                  :style="{ backgroundColor: statusColors[appointment.status] }"
+              ></div>
+              From {{ formatDateTo24Hour(appointment.startTime) }} - {{ formatDateTo24Hour(appointment.endTime) }}
+              with Dr. {{ appointment.doctor.firstName }} {{ appointment.doctor.lastName }}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="calendar-main__right-container">
       <FullCalendar
@@ -84,7 +137,10 @@ const calendarOptions = computed(() => ({
           :key="JSON.stringify(events)"
       >
         <template v-slot:eventContent="arg">
-          <div class="calendar-event" :style="{ backgroundColor: statusColors[arg.event.extendedProps.status] }">
+          <div
+              class="calendar-event z-3"
+              :style="{ backgroundColor: statusColors[arg.event.extendedProps.status] }"
+              v-tooltip.top.html="{ value: arg.event.extendedProps.tooltipHtml, escape: false }">
             <div class="calendar-event__title">{{ arg.event.extendedProps.doctor }}</div>
             <div class="calendar-event__time">
               {{ formatDateTo24Hour(arg.event.start) }} - {{ formatDateTo24Hour(arg.event.end) }}
@@ -96,11 +152,55 @@ const calendarOptions = computed(() => ({
   </div>
 </template>
 
-<style scoped>
-.view-holidays-button {
-  position: absolute;
-  right: 1.3%;
-  z-index: 1;
+<style>
+.today-appointments, .month-appointments {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.today-appointments p, .month-appointments p {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.today-appointments ul, .month-appointments ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.today-appointments li, .month-appointments li {
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.fc-popover {
+  z-index: 1 !important;
+}
+
+.fc-daygrid-more-link {
+  background-color: #197a2e;
+  color: white;
+  font-size: 0.9rem;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s ease;
+  z-index: 9999;  /* Ensure it's above the calendar */
+  width: 100%;
+}
+
+.fc-daygrid-more-link:hover {
+  background-color: rgba(64, 168, 87, 0.87) !important;
+}
+
+.fc-daygrid-more-link:active {
+  background-color: #004085;
+  transform: scale(1);
 }
 
 .view-holidays-button .p-button {
@@ -124,7 +224,7 @@ const calendarOptions = computed(() => ({
   display: flex;
   flex-direction: column;
   gap: 32px;
-  width: 300px;
+  width: 340px;
   border-right: 1px solid #eae9ea;
   padding: 17px 20px;
 }
@@ -153,12 +253,12 @@ const calendarOptions = computed(() => ({
 
 /* Event styling */
 .calendar-event {
-  padding: 10px;
+  padding: 3px;
   border: 1px solid transparent;
   border-radius: 5px;
   text-align: center;
   font-size: 0.9rem;
-  color: white; /* Ensure the text is visible against the background */
+  color: white;
   font-weight: bold;
   width: 100%;
 }

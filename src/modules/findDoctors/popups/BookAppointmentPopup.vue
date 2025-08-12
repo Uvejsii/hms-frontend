@@ -48,7 +48,7 @@ const { validate, errors, values, setFieldValue } = useForm({
     notes: '',
     startTime: null,
     endTime: null,
-    price: props.data.id,
+    price: props.data.consultationFee,
     contactPhoneNumber: '',
     doctorId: props.data.id,
     userId: user.value?.id,

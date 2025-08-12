@@ -36,5 +36,6 @@ const toggle = (event) => {
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
+  margin-left: -10px;
 }
 </style>

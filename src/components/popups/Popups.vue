@@ -24,6 +24,15 @@ const DeleteDoctorReviewPopup = defineAsyncComponent(
 const BookAppointmentPopup = defineAsyncComponent(
     () => import('@/modules/findDoctors/popups/BookAppointmentPopup.vue')
 )
+const AddDoctorPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/AddDoctorPopup.vue')
+)
+const EditDoctorPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/EditDoctorPopup.vue')
+)
+const DeleteDoctorPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/DeleteDoctorPopup.vue')
+)
 
 const popups = reactive([])
 
@@ -62,6 +71,9 @@ provide('showAddDoctorReviewPopup', (data) => showPopup(markRaw(AddDoctorReviewP
 provide('showEditDoctorReviewPopup', (data) => showPopup(markRaw(EditDoctorReviewPopup), data))
 provide('showDeleteDoctorReviewPopup', (data) => showPopup(markRaw(DeleteDoctorReviewPopup), data))
 provide('showBookAppointmentPopup', (data) => showPopup(markRaw(BookAppointmentPopup), data))
+provide('showAddDoctorPopup', (data) => showPopup(markRaw(AddDoctorPopup), data))
+provide('showEditDoctorPopup', (data) => showPopup(markRaw(EditDoctorPopup), data))
+provide('showDeleteDoctorPopup', (data) => showPopup(markRaw(DeleteDoctorPopup), data))
 </script>
 
 <template>

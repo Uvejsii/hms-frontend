@@ -31,6 +31,22 @@ const router = createRouter({
       name: 'patient-appointments',
       component: () => import('@/modules/patientBookings/pages/PatientBookingsListing.vue'),
     },
+    {
+      path: '/admin',
+      name: 'admin',
+      children: [
+        {
+          path: 'admin-dashboard',
+          name: 'admin-dashboard',
+          component: () => import('@/modules/admin/pages/AdminDashboard.vue'),
+        },
+        {
+          path: 'employees-management',
+          name: 'employees-management',
+          component: () => import('@/modules/admin/pages/EmployeesManagement.vue'),
+        },
+      ]
+    },
   ],
 })
 

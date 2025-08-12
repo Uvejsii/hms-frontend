@@ -1,11 +1,13 @@
 <script setup>
+import TableSkeleton from "@/components/TableSkeleton.vue";
+
 const props = defineProps(["data"]);
 </script>
 
 <template>
   <div class="wrapper">
     <div class="overview-content">
-      <div v-if="props.data.isLoading">Loading...</div>
+      <TableSkeleton v-if="props.data.isLoading" rows="10" columns="2" />
       <div v-else>
         <div class="info-grid">
           <div class="info-item">

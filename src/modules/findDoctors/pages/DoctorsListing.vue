@@ -3,6 +3,7 @@ import {ref, computed, inject} from 'vue'
 import { Search, Circle, City, Clock, MapPin, Language, Calendar as CalendarIcon, User, CalendarPlus, ViewGrid, List } from "@iconoir/vue";
 import {useQuery} from "@tanstack/vue-query";
 import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
+import TableSkeleton from "@/components/TableSkeleton.vue";
 
 // State
 const searchQuery = ref('')
@@ -210,7 +211,7 @@ const bookAppointment = (data) => {
       </div>
     </div>
 
-    <div v-if="doctorsLoading">Loading....</div>
+    <TableSkeleton v-if="doctorsLoading" columns="4" rows="14"></TableSkeleton>
     <div v-else class="doctors-container" :class="viewMode">
       <div
           v-for="doctor in filteredDoctors"
@@ -228,7 +229,7 @@ const bookAppointment = (data) => {
 
         <div class="doctor-info">
           <div class="doctor-header">
-            <h3 class="doctor-name">{{ doctor.firstName }} {{ doctor.lastName }}</h3>
+            <h3 class="doctor-name">Dr. {{ doctor.firstName }} {{ doctor.lastName }}</h3>
             <div class="doctor-rating">
               <Rating :modelValue="doctor.reviewStarAverage" readonly :cancel="false" />
               <span class="rating-text">({{ doctor.totalReviewsCount }})</span>
@@ -256,10 +257,7 @@ const bookAppointment = (data) => {
           </div>
 
           <div class="doctor-actions">
-            <Button
-                class="p-button-outlined"
-                @click="viewDoctorDetails(doctor)"
-            >
+            <Button class="p-button-outlined">
               <User /> View Profile
             </Button>
             <Button

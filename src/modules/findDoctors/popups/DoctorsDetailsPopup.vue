@@ -91,7 +91,7 @@ const cancel = () => {
     </Tabs>
     <template #footer>
       <Button @click="cancel" severity="secondary" outlined>Close</Button>
-      <Button @click="bookAppointment(drData)"><CalendarPlus/> Book appointment</Button>
+      <Button @click="bookAppointment(drData)" :disabled="!drData.isAvailable"><CalendarPlus/> Book appointment</Button>
     </template>
   </Dialog>
 </template>
