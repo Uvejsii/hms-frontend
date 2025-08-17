@@ -30,8 +30,17 @@ const AddDoctorPopup = defineAsyncComponent(
 const EditDoctorPopup = defineAsyncComponent(
     () => import('@/modules/admin/popups/EditDoctorPopup.vue')
 )
-const DeleteDoctorPopup = defineAsyncComponent(
-    () => import('@/modules/admin/popups/DeleteDoctorPopup.vue')
+const UpdateDoctorStatusPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/UpdateDoctorStatusPopup.vue')
+)
+const AddDepartmentPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/AddDepartmentPopup.vue')
+)
+const EditDepartmentPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/EditDepartmentPopup.vue')
+)
+const UpdateDepartmentStatusPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/UpdateDepartmentStatusPopup.vue')
 )
 
 const popups = reactive([])
@@ -73,7 +82,10 @@ provide('showDeleteDoctorReviewPopup', (data) => showPopup(markRaw(DeleteDoctorR
 provide('showBookAppointmentPopup', (data) => showPopup(markRaw(BookAppointmentPopup), data))
 provide('showAddDoctorPopup', (data) => showPopup(markRaw(AddDoctorPopup), data))
 provide('showEditDoctorPopup', (data) => showPopup(markRaw(EditDoctorPopup), data))
-provide('showDeleteDoctorPopup', (data) => showPopup(markRaw(DeleteDoctorPopup), data))
+provide('showUpdateDoctorStatusPopup', (data) => showPopup(markRaw(UpdateDoctorStatusPopup), data))
+provide('showAddDepartmentPopup', (data) => showPopup(markRaw(AddDepartmentPopup), data))
+provide('showEditDepartmentPopup', (data) => showPopup(markRaw(EditDepartmentPopup), data))
+provide('showUpdateDepartmentStatusPopup', (data) => showPopup(markRaw(UpdateDepartmentStatusPopup), data))
 </script>
 
 <template>

@@ -4,15 +4,17 @@ const domain = import.meta.env.VITE_HMS_API_URL
 
 /**
  * Get all doctors
- *
+ * @param {String} status - status of the doctor to fetch
  * @returns {Promise<Array>} - Array of doctors
  *
  * @throws {Error} - When the response status is not 200
  */
 
-export const getDoctors = async () => {
+export const getDoctors = async (status) => {
     try {
-        return await api.get(`${domain}/Doctors/GetAllDoctors`)
+        return await api.get(`${domain}/Doctors/GetAllDoctors`, {
+            params: { status }
+        })
     } catch (error) {
         throw new Error(`Error getting doctors: ${error}`)
     }

@@ -4,7 +4,7 @@ import {getDepartments} from "@/modules/admin/sdk/api.js";
 
 const { data, isLoading } = useQuery({
   queryKey: ['departments'],
-  queryFn: () => getDepartments()
+  queryFn: () => getDepartments(true)
 })
 </script>
 

@@ -3,6 +3,7 @@
   --app-color: #333;
   --app-border-color: #EAE9EA;
   --app-border: 1px solid var(--app-border-color);
+  --admin-sidebar-width: 250px;
 
   --primary-color: #0088CC;
   --primary-light: #4DABDE;
@@ -86,7 +87,7 @@ p {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: none !important;
 }
 
 hr {

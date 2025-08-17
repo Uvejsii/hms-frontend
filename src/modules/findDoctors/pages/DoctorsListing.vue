@@ -15,7 +15,7 @@ const viewMode = ref('grid')
 
 const { data, isLoading: doctorsLoading} = useQuery({
   queryKey: ['doctors'],
-  queryFn: getDoctors
+  queryFn: () => getDoctors(true),
 })
 
 // Filter options

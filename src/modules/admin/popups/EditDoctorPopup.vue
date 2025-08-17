@@ -31,6 +31,7 @@ const { validate, errors, values } = useForm({
     phoneNumber: yup.string().required('Phone number is required'),
     consultationFee: yup.number().min(15).required('Consultation fee is required'),
     isAvailable: yup.boolean().default(true).required('Availability is required'),
+    isActive: yup.boolean().default(true).required('Active status is required'),
     departamentId: yup.number().required('Department is required'),
     languages: yup.array().required('Languages is required'),
   }),
@@ -43,6 +44,7 @@ const { validate, errors, values } = useForm({
     phoneNumber: props.data.phoneNumber,
     consultationFee: props.data.consultationFee,
     isAvailable: props.data.isAvailable,
+    isActive: props.data.isActive,
     departamentId: props.data.departament.id,
     imageFileUrl: [],
     languages: props.data.languages.split(', ')
@@ -176,6 +178,7 @@ const submitForm = async () => {
       phoneNumber: values.phoneNumber,
       consultationFee: values.consultationFee,
       isAvailable: values.isAvailable,
+      isActive: values.isActive,
       departamentId: values.departamentId,
       imageFilePath: values.fileUrls?.[0] || null,
       languages: values.languages.join(', ')

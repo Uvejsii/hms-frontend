@@ -33,7 +33,11 @@ const { mutateAsync, isPending } = useMutation({
     }
     user.value = userData
     window.localStorage.setItem('hmsUser', JSON.stringify(userData))
-    router.push({ name: 'home' })
+    if (loginResponse.role === 'Admin') {
+      router.push({ name: 'admin-dashboard' })
+    } else {
+      router.push({ name: 'home' })
+    }
   },
   onError: (error) => {
     loginErrors.value = 'Invalid email or password'

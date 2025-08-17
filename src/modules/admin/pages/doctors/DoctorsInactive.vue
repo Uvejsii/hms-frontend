@@ -2,38 +2,23 @@
 import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
 import {useQuery} from "@tanstack/vue-query";
 import TableSkeleton from "@/components/TableSkeleton.vue";
-import { Check, Xmark, Plus, EditPencil, Trash } from "@iconoir/vue";
+import { Check, Xmark, Trash } from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
 import {inject} from "vue";
 
-const { data: doctors, isLoading: IsDoctorsLoading } = useQuery({
-  queryKey: ['doctors'],
-  queryFn: () => getDoctors(),
+const { data: doctors, isLoading: IsDoctorsLoading, isError: isDoctorsError } = useQuery({
+  queryKey: ['doctors-inactive'],
+  queryFn: () => getDoctors(false),
 });
 
-const showAddDoctorPopup = inject('showAddDoctorPopup')
-const openAddDoctorPopup = () => {
-  showAddDoctorPopup();
-}
-
-const showEditDoctorPopup = inject('showEditDoctorPopup')
-const openEditDoctorPopup = (data) => {
-  showEditDoctorPopup({...data});
-}
-
-const showDeleteDoctorPopup = inject('showDeleteDoctorPopup')
-const openDeleteDoctorPopup = (data) => {
-  showDeleteDoctorPopup({...data});
+const showUpdateDoctorStatusPopup = inject('showUpdateDoctorStatusPopup')
+const openUpdateDoctorStatusPopup = (data) => {
+  showUpdateDoctorStatusPopup({...data});
 }
 </script>
 
 <template>
-  <div class="text-end mb-2">
-    <Button @click="openAddDoctorPopup">
-      <Plus/> Add Doctor
-    </Button>
-  </div>
   <TableSkeleton rows="10" columns="7" v-if="IsDoctorsLoading" />
   <DataTable v-else :value="doctors" responsiveLayout="scroll">
     <Column header="Doctor">
@@ -76,15 +61,21 @@ const openDeleteDoctorPopup = (data) => {
     <Column header="Actions">
       <template #body="{ data }">
         <ActionMenu>
-          <ActionMenuItem @click="openEditDoctorPopup(data)">
-            <EditPencil/> Edit
-          </ActionMenuItem>
-          <ActionMenuItem severity="danger" @click="openDeleteDoctorPopup(data)">
-            <Trash /> Delete
+          <ActionMenuItem severity="success" @click="openUpdateDoctorStatusPopup(data)">
+            <Trash /> Activate
           </ActionMenuItem>
         </ActionMenu>
       </template>
     </Column>
+    <template #empty>
+      <TableSkeleton rows="10" columns="7" v-if="IsDoctorsLoading" />
+      <p v-if="isDoctorsError">Something went wrong, please try again.</p>
+      <template v-if="!IsDoctorsLoading && !isDoctorsError">
+        <p class="text-center m-0">
+          No inactive doctors found.
+        </p>
+      </template>
+    </template>
   </DataTable>
 </template>
 

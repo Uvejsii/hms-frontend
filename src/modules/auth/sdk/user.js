@@ -13,7 +13,8 @@ const logout = async (router) => {
 }
 
 const isUserLoggedIn = computed(() => !!user.value?.token);
+const userRole = computed(() => user.value?.role);
 
 export const useUser = () => {
-    return { user, logout, isUserLoggedIn }
+    return { user, logout, isUserLoggedIn, userRole }
 }

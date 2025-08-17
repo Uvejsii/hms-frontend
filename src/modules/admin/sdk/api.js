@@ -167,37 +167,97 @@ export const editDoctor = async (doctorData) => {
 }
 
 /**
- * Delete doctor by id
+ * Updates doctor status by id
  *
- * @param {String} id - id of the doctor to be deleted
+ * @param {String} id - id of the doctor to update status
+ * @param {String} status - status of the doctor to update status
  *
- * @returns {Promise<Object>} - Response object containing the added doctor's details
+ * @returns {Promise<Object>} - Response object
  *
  * @throws {Error} - When the response status is not 200
  */
 
-export const deleteDoctor = async (id) => {
+export const updateDoctorStatus = async (id, status) => {
     try {
-        return await api.delete(`${domain}/Doctors/DeleteDoctor`,{
-            params: { id }
+        return await api.put(`${domain}/Doctors/UpdateDoctorStatus`,null, {
+            params: { id, status }
         })
     } catch (error) {
-        throw new Error(`Error deleting doctor: ${error}`)
+        throw new Error(`Error deactivating doctor: ${error}`)
     }
 }
 
 /**
  * Get departments
+ * @param {String} status - status of the doctor to deactivate
  *
  * @returns {Promise<Array>} - List departments
  *
  * @throws {Error} - When the response status is not 200
  */
 
-export const getDepartments = async () => {
+export const getDepartments = async (status) => {
     try {
-        return await api.get(`${domain}/Department/GetAllDepartments`)
+        return await api.get(`${domain}/Department/GetAllDepartments`, {
+            params: { status }
+        })
     } catch (error) {
         throw new Error(`Error getting departments: ${error}`)
+    }
+}
+
+/**
+ * Add department
+ *
+ * @returns {Promise<Object>} - Response object containing the added department's details
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const addDepartment = async (departmentData) => {
+    try {
+        return await api.post(`${domain}/Department/CreateDepartment`, departmentData)
+    } catch (error) {
+        throw new Error(`Error adding department: ${error}`)
+    }
+}
+
+/**
+ * Edit department
+ *
+ * @returns {Promise<Object>} - Response object containing the updated department's details
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const editDepartment = async (departmentData) => {
+    try {
+        return await api.put(`${domain}/Department/EditDepartment`, departmentData, {
+            params: { id: departmentData.id }
+            },
+        )
+    } catch (error) {
+        throw new Error(`Error editing department: ${error}`)
+    }
+}
+
+/**
+ * Update department status
+ * @param {String} id - id of the department to update status
+ * @param {String} status - status for the department to update
+ *
+ * @returns {Promise<Object>} - Response object
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const editDepartmentStatus = async (id, status) => {
+    try {
+        return await api.put(`${domain}/Department/UpdateDepartmentStatus`, null, {
+                params: { id, status }
+            },
+        )
+    } catch (error) {
+        throw new Error(`Error updating department status: ${error}`)
     }
 }

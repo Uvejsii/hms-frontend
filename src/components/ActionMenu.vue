@@ -6,6 +6,7 @@ import { MoreVert } from "@iconoir/vue";
 
 const op = ref()
 const toggle = (event) => {
+  if (!op.value) return
   op.value.toggle(event)
 }
 </script>

@@ -101,14 +101,6 @@ onUnmounted(() => {
 <template>
   <header class="topbar">
     <div class="topbar-left">
-      <Button
-          icon="pi pi-bars"
-          text
-          rounded
-          aria-label="Menu"
-          class="menu-button p-button-text"
-          @click="$emit('toggle-sidebar')"
-      />
       <div class="page-title">
         <h1><RouterLink to="/" class="text-decoration-none text-black">Find doctors</RouterLink></h1>
       </div>

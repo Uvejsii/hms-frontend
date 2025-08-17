@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUser } from '@/modules/auth/sdk/user.js'
 
-const { isUserLoggedIn } = useUser()
+const { isUserLoggedIn, userRole } = useUser()
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,16 +34,55 @@ const router = createRouter({
     {
       path: '/admin',
       name: 'admin',
+      meta: { requiresAdmin: true },
       children: [
         {
           path: 'admin-dashboard',
           name: 'admin-dashboard',
           component: () => import('@/modules/admin/pages/AdminDashboard.vue'),
+          meta: { requiresAdmin: true },
         },
         {
-          path: 'employees-management',
-          name: 'employees-management',
-          component: () => import('@/modules/admin/pages/EmployeesManagement.vue'),
+          path: 'doctors-management',
+          name: 'doctors-management',
+          component: () => import('@/modules/admin/pages/doctors/DoctorsListing.vue'),
+          redirect: { name: 'doctors-active' },
+          meta: { requiresAdmin: true },
+          children: [
+            {
+              path: "active",
+              name: "doctors-active",
+              component: () => import('@/modules/admin/pages/doctors/DoctorsActive.vue'),
+              meta: { requiresAdmin: true },
+            },
+            {
+              path: "inactive",
+              name: "doctors-inactive",
+              component: () => import('@/modules/admin/pages/doctors/DoctorsInactive.vue'),
+              meta: { requiresAdmin: true },
+            },
+          ]
+        },
+        {
+          path: 'departments-management',
+          name: 'departments-management',
+          component: () => import('@/modules/admin/pages/departments/DepartmentsListing.vue'),
+          redirect: { name: 'departments-active' },
+          meta: { requiresAdmin: true },
+          children: [
+            {
+              path: "active",
+              name: "departments-active",
+              component: () => import('@/modules/admin/pages/departments/DepartmentsActive.vue'),
+              meta: { requiresAdmin: true },
+            },
+            {
+              path: "inactive",
+              name: "departments-inactive",
+              component: () => import('@/modules/admin/pages/departments/DepartmentsInActive.vue'),
+              meta: { requiresAdmin: true },
+            },
+          ],
         },
       ]
     },
@@ -53,6 +92,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (!isUserLoggedIn && to.name !== 'login' && to.name !== 'register') {
     next({ name: 'login' })
+  } else if (to.matched.some(record => record.meta.requiresAdmin)) {
+    if (isUserLoggedIn && userRole.value === 'Admin') {
+      next()
+    } else {
+      next({ name: 'home' })
+    }
   } else {
     next()
   }
