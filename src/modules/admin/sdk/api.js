@@ -261,3 +261,55 @@ export const editDepartmentStatus = async (id, status) => {
         throw new Error(`Error updating department status: ${error}`)
     }
 }
+
+/**
+ * Get all patients
+ *
+ * @returns {Promise<Array>} - Array of patients
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getAllPatients = async () => {
+    try {
+        return await api.get(`${domain}/Auth/GetAllPatients`)
+    } catch (error) {
+        throw new Error(`Error getting patients: ${error}`)
+    }
+}
+
+/**
+ * Get appointments for a patient
+ *
+ * @param {Number} userId
+ *
+ * @returns {Promise<Array>} - Array of appointments for the patient
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getAppointmentsForPatient = async (userId) => {
+    try {
+        return await api.get(`${domain}/Booking/GetBookingsByUserId`, {
+            params: { userId }
+        })
+    } catch (error) {
+        throw new Error(`Error getting patients: ${error}`)
+    }
+}
+
+/**
+ * Reset password by email
+ *
+ * @returns {Promise<Object>} - Response object
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const resetPasswordByEmail = async (email) => {
+    try {
+        return await api.post(`${domain}/Auth/ResetPasswordCustom`, email)
+    } catch (error) {
+        throw new Error(`Error resetting password: ${error}`)
+    }
+}

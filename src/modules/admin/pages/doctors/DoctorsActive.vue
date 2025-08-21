@@ -2,7 +2,7 @@
 import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
 import {useQuery} from "@tanstack/vue-query";
 import TableSkeleton from "@/components/TableSkeleton.vue";
-import { Check, Xmark, EditPencil, Trash } from "@iconoir/vue";
+import { Check, Xmark, EditPencil, Trash, Restart } from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
 import {inject} from "vue";
@@ -22,6 +22,11 @@ const openEditDoctorPopup = (data) => {
 const showUpdateDoctorStatusPopup = inject('showUpdateDoctorStatusPopup')
 const openUpdateDoctorStatusPopup = (data) => {
   showUpdateDoctorStatusPopup({...data, revalidateKey: queryKey });
+}
+
+const showResetPasswordPopup = inject('showResetPasswordPopup')
+const openResetPasswordPopup = (data) => {
+  showResetPasswordPopup({...data });
 }
 </script>
 
@@ -48,7 +53,7 @@ const openUpdateDoctorStatusPopup = (data) => {
     </Column>
     <Column header="Consultation Fee">
       <template #body="{ data }">
-        <span>{{ data?.consultationFee }} &euro;</span>
+        <span>{{ data?.consultationFee.toFixed(2) }} &euro;</span>
       </template>
     </Column>
     <Column header="Phone number" field="phoneNumber" />
@@ -69,6 +74,9 @@ const openUpdateDoctorStatusPopup = (data) => {
         <ActionMenu>
           <ActionMenuItem @click="openEditDoctorPopup(data)">
             <EditPencil/> Edit
+          </ActionMenuItem>
+          <ActionMenuItem @click="openResetPasswordPopup(data)">
+            <Restart /> Reset Password
           </ActionMenuItem>
           <ActionMenuItem severity="danger" @click="openUpdateDoctorStatusPopup(data)">
             <Trash /> Deactivate

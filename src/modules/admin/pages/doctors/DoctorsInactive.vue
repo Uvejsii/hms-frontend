@@ -42,7 +42,7 @@ const openUpdateDoctorStatusPopup = (data) => {
     </Column>
     <Column header="Consultation Fee">
       <template #body="{ data }">
-        <span>{{ data?.consultationFee }} &euro;</span>
+        <span>{{ data?.consultationFee.toFixed(2) }} &euro;</span>
       </template>
     </Column>
     <Column header="Phone number" field="phoneNumber" />

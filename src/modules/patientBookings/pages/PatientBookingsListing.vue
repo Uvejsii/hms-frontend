@@ -8,7 +8,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Loading from "@/components/Loading.vue";
-import { formatDateTo24Hour } from "@/utils/helpers.js";
+import { formatDateTo24Hour, getStatusLabel } from "@/utils/helpers.js";
 import moment from "moment";
 
 const { user } = useUser();
@@ -18,17 +18,6 @@ const statusColors = {
   2: '#007BFF',  // Ongoing: Blue
   3: '#6F42C1',  // Finished: Purple
   4: '#DC3545',  // Cancelled: Red
-};
-
-const getStatusLabel = (status) => {
-  const labels = {
-    0: 'Pending',
-    1: 'Confirmed',
-    2: 'Ongoing',
-    3: 'Finished',
-    4: 'Cancelled',
-  };
-  return labels[status] || 'Unknown';
 };
 
 const { data, isLoading } = useQuery({

@@ -1,10 +1,11 @@
 <script setup>
-import { HomeHospital, PharmacyCrossTag, Community, Calendar, Settings } from '@iconoir/vue'
+import { GraphUp, HomeHospital, PharmacyCrossTag, Community, Calendar, Settings } from '@iconoir/vue'
 
 const routes = [
-  { name: 'Dashboard', path: '/admin/admin-dashboard', icon: HomeHospital },
+  { name: 'Dashboard', path: '/admin/admin-dashboard', icon: GraphUp },
   { name: 'Doctors', path: '/admin/doctors-management', icon: PharmacyCrossTag },
   { name: 'Departments', path: '/admin/departments-management', icon: HomeHospital },
+  { name: 'Patients', path: '/admin/patients', icon: Community },
 ]
 </script>
 

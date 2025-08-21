@@ -84,6 +84,12 @@ const router = createRouter({
             },
           ],
         },
+        {
+          path: 'patients',
+          name: 'patients',
+          component: () => import('@/modules/admin/pages/patients/PatientsListing.vue'),
+          meta: { requiresAdmin: true },
+        },
       ]
     },
   ],
