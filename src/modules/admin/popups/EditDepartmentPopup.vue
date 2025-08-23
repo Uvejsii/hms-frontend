@@ -23,7 +23,7 @@ const { validate, errors, values } = useForm({
   initialValues: {
     id: props.data.id,
     name: props.data.name,
-    location: props.data.name,
+    location: props.data.location,
   }
 })
 

@@ -2,10 +2,13 @@
 import {getAllPatients} from "@/modules/admin/sdk/api.js";
 import {useQuery} from "@tanstack/vue-query";
 import TableSkeleton from "@/components/TableSkeleton.vue";
-import {inject} from "vue";
-import { Plus, Restart, Eye } from "@iconoir/vue";
+import {computed, inject} from "vue";
+import {Plus, Restart, Eye, Search} from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
+import { useHospitalStore } from "@/stores/hospital.js";
+
+const hospitalStore = useHospitalStore();
 
 const queryKey = ['patients'];
 
@@ -13,6 +16,16 @@ const { data: patients, isLoading: IsPatientsLoading, isError: isPatientsError }
   queryKey: queryKey,
   queryFn: () => getAllPatients(),
 });
+
+const filteredPatients = computed(() => {
+  if (!patients?.value) return []
+  const term = hospitalStore.patientSearchTerm.toLowerCase()
+  return patients.value.filter(p =>
+      p.firstName?.toLowerCase().includes(term) ||
+      p.lastName?.toLowerCase().includes(term) ||
+      p.email?.toLowerCase().includes(term)
+  )
+})
 
 const showPatientAppointmentsSidebarPopup = inject('showPatientAppointmentsSidebarPopup')
 const openPatientAppointmentsSidebarPopup = (data) => {
@@ -31,13 +44,39 @@ const openAddPatientPopup = () => {
 </script>
 
 <template>
-  <div class="text-end mb-3">
-    <Button @click="openAddPatientPopup"><Plus /> Register Patient</Button>
+  <div class="d-flex justify-content-between mb-3">
+    <div>
+      <InputGroup>
+        <InputGroupAddon>
+          <Search />
+        </InputGroupAddon>
+        <InputText
+            v-model="hospitalStore.patientSearchTerm"
+            type="text"
+            class="patient-search-input"
+            placeholder="Search by name or email"
+        />
+      </InputGroup>
+    </div>
+    <div>
+      <Button @click="openAddPatientPopup"><Plus /> Register Patient</Button>
+    </div>
   </div>
   <DataTable
-      :value="patients"
+      :value="filteredPatients"
       rowHover
-      @row-click="openPatientAppointmentsSidebarPopup($event.data)">
+      @row-click="openPatientAppointmentsSidebarPopup($event.data)"
+      :paginator="true"
+      :rows="hospitalStore.itemsPerPage"
+      :totalRecords="filteredPatients.length"
+      :first="hospitalStore.currentPage"
+      @page="hospitalStore.onPage"
+  >
+    <Column header="No.">
+      <template #body="{ index }">
+        <span>{{ filteredPatients.length - (hospitalStore.currentPage + index) }}.</span>
+      </template>>
+    </Column>
     <Column header="Email" field="email" />
     <Column header="First name" field="firstName" />
     <Column header="Last name" field="lastName" />

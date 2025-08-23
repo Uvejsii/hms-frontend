@@ -40,31 +40,49 @@ const deleteReview = (data) => {
         </div>
       </div>
       <div class="reviews-list">
-        <div v-for="review in props?.data.reviews" :key="review?.id" class="review-item">
-          <div class="review-header">
-            <div class="reviewer-info">
-              <Avatar :label="review?.reviewer?.firstName[0] + review?.reviewer?.lastName[0]" size="small" />
-              <div class="reviewer-details">
-                <span class="reviewer-name">{{ review.reviewer?.firstName }} {{ review.reviewer?.lastName }}</span>
-                <span class="review-date">
-                  {{ review.updatedAt === '0001-01-01T00:00:00' ? formatDate(review.createdAt) : `Edited at ${formatDate(review.updatedAt)}` }}
-                </span>
+        <template v-if="props.data.reviews.length < 1">
+          <p class="m-0 text-center">
+            <b>Dr {{ props.data.firstName + ' ' + props.data.lastName }}</b> has not received any reviews yet.
+          </p>
+        </template>
+        <template v-else>
+          <div
+              v-for="review in props?.data.reviews"
+              :key="review?.id"
+              class="review-item"
+          >
+            <div class="review-header">
+              <div class="reviewer-info">
+                <Avatar
+                    :label="review?.reviewer?.firstName[0] + review?.reviewer?.lastName[0]"
+                    size="small"
+                />
+                <div class="reviewer-details">
+                  <span class="reviewer-name">{{ review.reviewer?.firstName }} {{ review.reviewer?.lastName }}</span>
+                  <span class="review-date">
+              {{
+                      review.updatedAt === '0001-01-01T00:00:00'
+                          ? formatDate(review.createdAt)
+                          : `Edited at ${formatDate(review.updatedAt)}`
+                    }}
+            </span>
+                </div>
               </div>
+              <Rating :modelValue="review.stars" readonly :cancel="false" />
             </div>
-            <Rating :modelValue="review.stars" readonly :cancel="false" />
+            <div class="d-flex justify-content-between">
+              <p class="review-text">{{ review.comment }}</p>
+              <ActionMenu v-if="user?.id === review.reviewer?.id">
+                <ActionMenuItem @click="editReview(review)">
+                  <EditPencil />Edit
+                </ActionMenuItem>
+                <ActionMenuItem severity="danger" @click="deleteReview(review)">
+                  <Trash /> Delete
+                </ActionMenuItem>
+              </ActionMenu>
+            </div>
           </div>
-          <div class="d-flex justify-content-between">
-            <p class="review-text">{{ review.comment }}</p>
-            <ActionMenu v-if="user?.id === review.reviewer?.id">
-              <ActionMenuItem @click="editReview(review)">
-                <EditPencil/>Edit
-              </ActionMenuItem>
-              <ActionMenuItem severity="danger" @click="deleteReview(review)">
-                <Trash/> Delete
-              </ActionMenuItem>
-            </ActionMenu>
-          </div>
-        </div>
+        </template>
       </div>
   </div>
 </template>

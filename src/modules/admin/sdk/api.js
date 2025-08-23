@@ -294,7 +294,7 @@ export const getAppointmentsForPatient = async (userId) => {
             params: { userId }
         })
     } catch (error) {
-        throw new Error(`Error getting patients: ${error}`)
+        throw new Error(`Error getting patients appointments: ${error}`)
     }
 }
 
@@ -311,5 +311,25 @@ export const resetPasswordByEmail = async (email) => {
         return await api.post(`${domain}/Auth/ResetPasswordCustom`, email)
     } catch (error) {
         throw new Error(`Error resetting password: ${error}`)
+    }
+}
+
+/**
+ * Get appointments for a doctor by doctor id
+ *
+ * @param {Number} doctorId
+ *
+ * @returns {Promise<Array>} - Array of appointments for the doctor
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getAppointmentsForDoctor = async (doctorId) => {
+    try {
+        return await api.get(`${domain}/Booking/GetBookingsByDoctorId`, {
+            params: { doctorId }
+        })
+    } catch (error) {
+        throw new Error(`Error getting doctors appointments: ${error}`)
     }
 }

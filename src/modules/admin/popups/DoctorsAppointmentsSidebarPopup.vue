@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useQuery } from '@tanstack/vue-query'
-import {getAppointmentsForPatient} from "@/modules/admin/sdk/api.js";
+import {getAppointmentsForDoctor} from "@/modules/admin/sdk/api.js";
 import TableSkeleton from "@/components/TableSkeleton.vue";
 import {formatDateTo24Hour, formatDateWithHour, getStatusLabel} from "@/utils/helpers.js";
 
@@ -9,10 +9,10 @@ const emit = defineEmits(['close'])
 const props = defineProps(['data'])
 const visible = ref(true)
 
-const appointmentsByUserKey = computed(() => ['appointments', props.data.id])
+const appointmentsByUserKey = computed(() => ['doctor-appointments', props.data.id])
 const { data, isLoading } = useQuery({
   queryKey: appointmentsByUserKey,
-  queryFn: () => getAppointmentsForPatient(props.data.id)
+  queryFn: () => getAppointmentsForDoctor(props.data.id)
 })
 
 const cancel = () => {
@@ -25,7 +25,7 @@ const cancel = () => {
       v-model:visible="visible"
       @hide="cancel"
       style="max-width: 1098px; width: 100%"
-      :header="`${props.data.firstName} ${props.data.lastName}'s appointments`"
+      :header="`Dr. ${props.data.firstName} ${props.data.lastName}'s appointments`"
       position="right"
   >
     <div class="patient-appointments-table">
@@ -33,9 +33,9 @@ const cancel = () => {
           style="table-layout: fixed"
           :value="data"
       >
-        <Column field="" header="Doctor">
+        <Column field="" header="Patient">
           <template #body="{ data }">
-            <span>Dr. {{ data.doctor.firstName + ' ' + data.doctor.lastName }}</span>
+            <span>{{ data.user.firstName + ' ' + data.user.lastName }}</span>
           </template>
         </Column>
         <Column field="" header="Date">

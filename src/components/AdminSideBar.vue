@@ -6,6 +6,7 @@ const routes = [
   { name: 'Doctors', path: '/admin/doctors-management', icon: PharmacyCrossTag },
   { name: 'Departments', path: '/admin/departments-management', icon: HomeHospital },
   { name: 'Patients', path: '/admin/patients', icon: Community },
+  { name: 'Appointments', path: '/admin/appointments', icon: Calendar },
 ]
 </script>
 
@@ -35,7 +36,7 @@ const routes = [
   padding: 24px 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+  z-index: 1;
 }
 
 .sidebar-title {

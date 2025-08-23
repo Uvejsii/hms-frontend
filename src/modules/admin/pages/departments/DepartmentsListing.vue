@@ -1,8 +1,10 @@
 <script setup>
 import {inject, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import { Plus } from "@iconoir/vue";
+import {Plus, Search} from "@iconoir/vue";
+import { useHospitalStore } from "@/stores/hospital.js";
 
+const hospitalStore = useHospitalStore();
 const router = useRouter();
 const route = useRoute();
 const activeTab = ref(route.name);
@@ -38,6 +40,19 @@ const openAddDepartmentPopup = () => {
           </Tab>
         </TabList>
       </Tabs>
+      <div>
+        <InputGroup>
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputText
+              v-model="hospitalStore.departmentSearchTerm"
+              type="text"
+              class="department-search-input"
+              placeholder="Search by name or location"
+          />
+        </InputGroup>
+      </div>
       <div class="text-end mb-2">
         <Button @click="openAddDepartmentPopup">
           <Plus/> Add Department
@@ -57,5 +72,9 @@ const openAddDepartmentPopup = () => {
 
 .tab-active {
   color: var(--secondary-dark) !important;
+}
+
+.department-search-input {
+  width: 220px !important;
 }
 </style>

@@ -1,10 +1,10 @@
 <script setup>
-import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
-import {useQuery} from "@tanstack/vue-query";
-import { Plus } from "@iconoir/vue";
+import { Plus, Search } from "@iconoir/vue";
 import {inject, ref} from "vue";
 import {useRoute, useRouter} from "vue-router";
+import { useHospitalStore } from "@/stores/hospital.js";
 
+const hospitalStore = useHospitalStore();
 const router = useRouter();
 const route = useRoute();
 const activeTab = ref(route.name);
@@ -40,6 +40,19 @@ const openAddDoctorPopup = () => {
           </Tab>
         </TabList>
       </Tabs>
+      <div>
+        <InputGroup>
+          <InputGroupAddon>
+            <Search />
+          </InputGroupAddon>
+          <InputText
+              v-model="hospitalStore.doctorSearchTerm"
+              type="text"
+              class="doctor-search-input"
+              placeholder="Search by name or email"
+          />
+        </InputGroup>
+      </div>
       <div class="text-end mb-2">
         <Button @click="openAddDoctorPopup">
           <Plus/> Add Doctor

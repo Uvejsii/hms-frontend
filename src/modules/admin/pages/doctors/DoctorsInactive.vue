@@ -5,12 +5,25 @@ import TableSkeleton from "@/components/TableSkeleton.vue";
 import { Check, Xmark, Trash } from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
-import {inject} from "vue";
+import {computed, inject} from "vue";
+import { useHospitalStore } from "@/stores/hospital.js";
+
+const hospitalStore = useHospitalStore();
 
 const { data: doctors, isLoading: IsDoctorsLoading, isError: isDoctorsError } = useQuery({
   queryKey: ['doctors-inactive'],
   queryFn: () => getDoctors(false),
 });
+
+const filteredDoctors = computed(() => {
+  if (!doctors?.value) return []
+  const term = hospitalStore.doctorSearchTerm.toLowerCase()
+  return doctors.value.filter(d =>
+      d.firstName?.toLowerCase().includes(term) ||
+      d.lastName?.toLowerCase().includes(term) ||
+      d.email?.toLowerCase().includes(term)
+  )
+})
 
 const showUpdateDoctorStatusPopup = inject('showUpdateDoctorStatusPopup')
 const openUpdateDoctorStatusPopup = (data) => {
@@ -19,8 +32,19 @@ const openUpdateDoctorStatusPopup = (data) => {
 </script>
 
 <template>
-  <TableSkeleton rows="10" columns="7" v-if="IsDoctorsLoading" />
-  <DataTable v-else :value="doctors" responsiveLayout="scroll">
+  <DataTable
+      :value="filteredDoctors"
+      responsiveLayout="scroll"
+      :paginator="true"
+      :rows="hospitalStore.itemsPerPage"
+      :totalRecords="filteredDoctors.length"
+      :first="hospitalStore.currentPage"
+      @page="hospitalStore.onPage">
+    <Column header="No.">
+      <template #body="{ index }">
+        <span>{{ filteredDoctors.length - (hospitalStore.currentPage + index) }}.</span>
+      </template>>
+    </Column>
     <Column header="Doctor">
       <template #body="{ data }">
         <div class="d-flex gap-4 align-items-center">

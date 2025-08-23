@@ -5,14 +5,26 @@ import TableSkeleton from "@/components/TableSkeleton.vue";
 import { Check, Xmark, EditPencil, Trash, Restart } from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
-import {inject} from "vue";
+import {computed, inject} from "vue";
+import { useHospitalStore } from "@/stores/hospital.js";
 
+const hospitalStore = useHospitalStore();
 const queryKey = ['doctors-active'];
 
 const { data: doctors, isLoading: IsDoctorsLoading, isError: isDoctorsError } = useQuery({
   queryKey: queryKey,
   queryFn: () => getDoctors(true),
 });
+
+const filteredDoctors = computed(() => {
+  if (!doctors?.value) return []
+  const term = hospitalStore.doctorSearchTerm.toLowerCase()
+  return doctors.value.filter(d =>
+      d.firstName?.toLowerCase().includes(term) ||
+      d.lastName?.toLowerCase().includes(term) ||
+      d.email?.toLowerCase().includes(term)
+  )
+})
 
 const showEditDoctorPopup = inject('showEditDoctorPopup')
 const openEditDoctorPopup = (data) => {
@@ -28,10 +40,30 @@ const showResetPasswordPopup = inject('showResetPasswordPopup')
 const openResetPasswordPopup = (data) => {
   showResetPasswordPopup({...data });
 }
+
+const showDoctorsAppointmentsSidebarPopup = inject('showDoctorsAppointmentsSidebarPopup')
+const openDoctorsAppointmentsSidebarPopup = (data) => {
+  showDoctorsAppointmentsSidebarPopup({...data });
+}
 </script>
 
 <template>
-  <DataTable :value="doctors" responsiveLayout="scroll">
+  <DataTable
+      :value="filteredDoctors"
+      rowHover
+      @row-click="openDoctorsAppointmentsSidebarPopup($event.data)"
+      responsiveLayout="scroll"
+      :paginator="true"
+      :rows="hospitalStore.itemsPerPage"
+      :totalRecords="filteredDoctors.length"
+      :first="hospitalStore.currentPage"
+      @page="hospitalStore.onPage"
+  >
+    <Column header="No.">
+      <template #body="{ index }">
+        <span>{{ filteredDoctors.length - (hospitalStore.currentPage + index) }}.</span>
+      </template>>
+    </Column>
     <Column header="Doctor">
       <template #body="{ data }">
         <div class="d-flex gap-4 align-items-center">
@@ -102,5 +134,9 @@ const openResetPasswordPopup = (data) => {
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.p-datatable >>> .p-datatable-tbody > tr:hover {
+  cursor: pointer;
 }
 </style>
