@@ -33,10 +33,10 @@ const toggle = (event) => {
   box-shadow: 0px 3px 8px 0px #0000001f;
   background-color: white;
   border-radius: 4px;
-  min-width: 150px;
+  min-width: 170px;
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
-  margin-left: -10px;
+  margin-left: -40px;
 }
 </style>

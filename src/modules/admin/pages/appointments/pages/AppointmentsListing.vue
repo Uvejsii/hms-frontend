@@ -6,7 +6,13 @@ import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
 import { useHospitalStore } from "@/stores/hospital.js";
 import {getAllAppointments} from "@/modules/admin/pages/appointments/sdk/api.js";
-import {formatDateTo24Hour, formatDateWithHour, getStatusLabel} from "@/utils/helpers.js";
+import {
+  formatDateTo24Hour,
+  formatDateWithHour,
+  generateInvoice,
+  generatePrescription,
+  getStatusLabel
+} from "@/utils/helpers.js";
 
 const hospitalStore = useHospitalStore();
 
@@ -64,10 +70,10 @@ const { data: appointments, isLoading: IsAppointmentsLoading, isError: isAppoint
     <Column header="Actions">
       <template #body="{ data }">
         <ActionMenu>
-          <ActionMenuItem>
+          <ActionMenuItem @click="generateInvoice(data)">
             <Download /> Download Invoice
           </ActionMenuItem>
-          <ActionMenuItem>
+          <ActionMenuItem @click="generatePrescription(data)">
             <Download /> Download Prescription
           </ActionMenuItem>
         </ActionMenu>

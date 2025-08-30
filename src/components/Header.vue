@@ -102,7 +102,9 @@ onUnmounted(() => {
   <header class="topbar">
     <div class="topbar-left">
       <div class="page-title">
-        <h1><RouterLink to="/" class="text-decoration-none text-black">Find doctors</RouterLink></h1>
+        <RouterLink to="/" class="text-decoration-none text-black">
+          <img src="../assets/HMS-Logo.png" alt="hms-logo" class="hms-logo">
+        </RouterLink>
       </div>
     </div>
 
@@ -156,6 +158,10 @@ onUnmounted(() => {
 .topbar-left {
   display: flex;
   align-items: center;
+}
+
+.hms-logo {
+  height: 40px;
 }
 
 .menu-button {

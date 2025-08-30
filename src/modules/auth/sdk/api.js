@@ -37,3 +37,21 @@ export const registerPatient = async (data) => {
         throw new Error(`Error logging in: ${error}`)
     }
 }
+
+/**
+ * Change password
+ *
+ * @param {Object} data
+ *
+ * @returns {Promise<Object>} - The response object
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const changePassword = async (data) => {
+    try {
+        return await api.put(`${domain}/Auth/ChangePasswordCustom`, data)
+    } catch (error) {
+        throw new Error(`Error changing password: ${error}`)
+    }
+}
