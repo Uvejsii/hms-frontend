@@ -57,6 +57,12 @@ const DoctorsAppointmentsSidebarPopup = defineAsyncComponent(
 const ChangePasswordPopup = defineAsyncComponent(
     () => import('@/modules/auth/popups/ChangePasswordPopup.vue')
 )
+const DoctorsVacationsSidebarPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/DoctorsVacationsSidebarPopup.vue')
+)
+const UpdateVacationStatusPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/UpdateVacationStatusPopup.vue')
+)
 
 const popups = reactive([])
 
@@ -106,6 +112,8 @@ provide('showResetPasswordPopup', (data) => showPopup(markRaw(ResetPasswordPopup
 provide('showAddPatientPopup', (data) => showPopup(markRaw(AddPatientPopup), data))
 provide('showDoctorsAppointmentsSidebarPopup', (data) => showPopup(markRaw(DoctorsAppointmentsSidebarPopup), data))
 provide('showChangePasswordPopup', (data) => showPopup(markRaw(ChangePasswordPopup), data))
+provide('showDoctorsVacationsSidebarPopup', (data) => showPopup(markRaw(DoctorsVacationsSidebarPopup), data))
+provide('showUpdateVacationStatusPopup', (data) => showPopup(markRaw(UpdateVacationStatusPopup), data))
 </script>
 
 <template>

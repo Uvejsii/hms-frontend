@@ -21,7 +21,7 @@ const { data: unavailableDoctorsCount, isLoading: isUnavailableDoctorsCountLoadi
 const chartData = computed(() => {
   if (availableDoctorsCount.value && unavailableDoctorsCount.value) {
     return {
-      labels: ['Available Doctors', 'Unavailable Doctors'],
+      labels: [`Available Doctors (${availableDoctorsCount.value})`, `Unavailable Doctors (${unavailableDoctorsCount.value})`],
       datasets: [
         {
           rotation: Math.PI - 40,
@@ -66,10 +66,10 @@ const chartOptions = ref({
     <div class="p-3">
       <TableSkeleton
           v-if="isAvailableDoctorsCountLoading && isUnavailableDoctorsCountLoading"
-          rows="10"
+          rows="9"
           columns="1"
       />
-      <Doughnut v-else :width="470" :data="chartData" :options="chartOptions" />
+      <Doughnut v-else :width="370" :data="chartData" :options="chartOptions" />
     </div>
   </div>
 </template>

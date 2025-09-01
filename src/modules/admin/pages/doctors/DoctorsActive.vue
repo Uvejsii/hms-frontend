@@ -2,7 +2,7 @@
 import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
 import {useQuery} from "@tanstack/vue-query";
 import TableSkeleton from "@/components/TableSkeleton.vue";
-import { Check, Xmark, EditPencil, Trash, Restart } from "@iconoir/vue";
+import { Check, Xmark, EditPencil, Trash, Restart, Calendar, Airplane } from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
 import {computed, inject} from "vue";
@@ -45,13 +45,16 @@ const showDoctorsAppointmentsSidebarPopup = inject('showDoctorsAppointmentsSideb
 const openDoctorsAppointmentsSidebarPopup = (data) => {
   showDoctorsAppointmentsSidebarPopup({...data });
 }
+
+const showDoctorsVacationsSidebarPopup = inject('showDoctorsVacationsSidebarPopup')
+const openDoctorsVacationsSidebarPopup = (data) => {
+  showDoctorsVacationsSidebarPopup({...data });
+}
 </script>
 
 <template>
   <DataTable
       :value="filteredDoctors"
-      rowHover
-      @row-click="openDoctorsAppointmentsSidebarPopup($event.data)"
       responsiveLayout="scroll"
       :paginator="true"
       :rows="hospitalStore.itemsPerPage"
@@ -107,6 +110,12 @@ const openDoctorsAppointmentsSidebarPopup = (data) => {
           <ActionMenuItem @click="openEditDoctorPopup(data)">
             <EditPencil/> Edit
           </ActionMenuItem>
+          <ActionMenuItem @click="openDoctorsAppointmentsSidebarPopup(data)">
+            <Calendar /> Appointments
+          </ActionMenuItem>
+          <ActionMenuItem @click="openDoctorsVacationsSidebarPopup(data)">
+            <Airplane /> Vacation Requests
+          </ActionMenuItem>
           <ActionMenuItem @click="openResetPasswordPopup(data)">
             <Restart /> Reset Password
           </ActionMenuItem>
@@ -134,9 +143,5 @@ const openDoctorsAppointmentsSidebarPopup = (data) => {
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-}
-
-.p-datatable >>> .p-datatable-tbody > tr:hover {
-  cursor: pointer;
 }
 </style>

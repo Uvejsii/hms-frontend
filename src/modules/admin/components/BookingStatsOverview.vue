@@ -13,7 +13,7 @@ defineProps({
       <p>Booking Status Overview</p>
     </div>
     <div class="p-3" v-if="appointmentsLoading">
-      <TableSkeleton rows="10" columns="2" />
+      <TableSkeleton rows="9" columns="2" />
     </div>
     <div class="p-3 d-flex flex-column gap-2" v-else>
       <div class="test">
@@ -36,7 +36,7 @@ defineProps({
   display: flex;
   gap: 15px;
   width: 100%;
-  height: 70px;
+  height: 60px;
 }
 
 .p-tag {

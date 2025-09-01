@@ -29,13 +29,14 @@ defineProps({
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   font-weight: bold;
+  height: 80px;
 }
 
 .left-stats-card p:first-of-type {
-  font-size: 35px ;
+  font-size: 25px ;
 }
 
 .left-stats-card p:last-of-type {
-  font-size: 20px ;
+  font-size: 15px ;
 }
 </style>

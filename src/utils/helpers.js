@@ -29,6 +29,15 @@ export const getStatusLabel = (status) => {
     return labels[status] || 'Unknown';
 };
 
+export const getVacationTypeLabel = (status) => {
+    const labels = {
+        0: 'Vacation',
+        1: 'Sick Leave',
+        2: 'Unpaid Leave',
+    };
+    return labels[status] || 'Unknown';
+};
+
 function generateGUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         const r = (Math.random() * 16) | 0;

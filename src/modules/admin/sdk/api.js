@@ -333,3 +333,79 @@ export const getAppointmentsForDoctor = async (doctorId) => {
         throw new Error(`Error getting doctors appointments: ${error}`)
     }
 }
+
+/** Get all vacations
+ *
+ * @param {Boolean} status - status of the vacations to fetch
+ *
+ * @returns {Promise<Array>} - Array of vacations
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getAllVacations = async (status) => {
+    try {
+        return await api.get(`${domain}/DoctorVacation/GetAllVacations`, {
+            params: { status }
+        })
+    } catch (error) {
+        throw new Error(`Error getting vacations: ${error}`)
+    }
+}
+
+/**
+ * Get vacation requests for a doctor by doctor id
+ *
+ * @param {Number} doctorId
+ *
+ * @returns {Promise<Array>} - Array of vacation requests for the doctor
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getVacationRequestsForDoctor = async (doctorId) => {
+    try {
+        return await api.get(`${domain}/DoctorVacation/GetDoctorVacationsByDrId`, {
+            params: { doctorId }
+        })
+    } catch (error) {
+        throw new Error(`Error getting doctors vacation requests: ${error}`)
+    }
+}
+
+/**
+ * Get approved vacation requests
+ *
+ * @returns {Promise<Array>} - Array of approved vacation requests
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getAllApprovedVacationRequests = async () => {
+    try {
+        return await api.get(`${domain}/DoctorVacation/GetAllApprovedVacationRequests`)
+    } catch (error) {
+        throw new Error(`Error getting approved vacation requests: ${error}`)
+    }
+}
+
+/**
+ * Update vacation request for a doctor by vacation id and status
+ *
+ * @param {Number} vacationId
+ * @param {Boolean} status
+ *
+ * @returns {Promise<Object>} - Response object
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const updateVacationRequest = async (vacationId, status) => {
+    try {
+        return await api.put(`${domain}/DoctorVacation/UpdateVacation`, null, {
+            params: { vacationId, status }
+        })
+    } catch (error) {
+        throw new Error(`Error updating vacation request: ${error}`)
+    }
+}

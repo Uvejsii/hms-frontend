@@ -49,7 +49,7 @@ const stats = computed(() => [
       <TableSkeleton
           v-if="isDoctorsCountLoading || isDepartmentsCountLoading
           || isPatientsCountLoading || isAppointmentsCountLoading"
-          rows="4"
+          rows="3"
           columns="4"
       />
       <div class="admin-dashboard-stats" v-else>
@@ -79,6 +79,10 @@ const stats = computed(() => [
 </template>
 
 <style scoped>
+.admin-dashboard {
+  max-width: 81vw;
+}
+
 .admin-dashboard-stats {
   display: flex;
   flex-wrap: wrap;
@@ -87,7 +91,6 @@ const stats = computed(() => [
 
 .dashboard-charts-wrapper {
   display: flex;
-  gap: 20px;
-  margin-top: 20px;
+  flex-wrap: wrap;
 }
 </style>

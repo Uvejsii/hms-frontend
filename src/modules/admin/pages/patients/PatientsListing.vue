@@ -3,7 +3,7 @@ import {getAllPatients} from "@/modules/admin/sdk/api.js";
 import {useQuery} from "@tanstack/vue-query";
 import TableSkeleton from "@/components/TableSkeleton.vue";
 import {computed, inject} from "vue";
-import {Plus, Restart, Eye, Search} from "@iconoir/vue";
+import {Plus, Restart, Calendar, Search} from "@iconoir/vue";
 import ActionMenu from "@/components/ActionMenu.vue";
 import ActionMenuItem from "@/components/ActionMenuItem.vue";
 import { useHospitalStore } from "@/stores/hospital.js";
@@ -64,8 +64,6 @@ const openAddPatientPopup = () => {
   </div>
   <DataTable
       :value="filteredPatients"
-      rowHover
-      @row-click="openPatientAppointmentsSidebarPopup($event.data)"
       :paginator="true"
       :rows="hospitalStore.itemsPerPage"
       :totalRecords="filteredPatients.length"
@@ -87,7 +85,7 @@ const openAddPatientPopup = () => {
             <Restart /> Reset Password
           </ActionMenuItem>
           <ActionMenuItem @click="openPatientAppointmentsSidebarPopup(data)">
-            <Eye /> View Appointments
+            <Calendar /> Appointments
           </ActionMenuItem>
         </ActionMenu>
       </template>
@@ -105,7 +103,4 @@ const openAddPatientPopup = () => {
 </template>
 
 <style scoped>
-.p-datatable >>> .p-datatable-tbody > tr:hover {
-  cursor: pointer;
-}
 </style>

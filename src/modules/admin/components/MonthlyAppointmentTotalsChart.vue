@@ -65,11 +65,13 @@ const chartOptions = ref({
           rows="10"
           columns="1"
       />
-      <Bar v-else :width="700" :data="chartData" :options="chartOptions" />
+      <Bar v-else :width="600" :data="chartData" :options="chartOptions" />
     </div>
   </div>
 </template>
 
 <style scoped>
-
+.admin-dashboard-chart-large {
+  height: 100%;
+}
 </style>

@@ -15,7 +15,9 @@ const { data: departments, isLoading: isDepartmentsLoading } = useQuery({
 
 const departmentData = computed(() => {
   if (departments.value) {
-    const departmentNames = departments.value?.map(department => department?.departmentName);
+    const departmentNames = departments.value?.map(
+        department => `${department?.departmentName} (${department?.doctorCount})`
+    );
     const doctorCounts = departments.value?.map(department => department?.doctorCount);
 
     return {
@@ -60,10 +62,10 @@ const departmentChartOptions = computed(() => ({
     <div class="p-3">
       <TableSkeleton
           v-if="isDepartmentsLoading"
-          rows="10"
+          rows="9"
           columns="1"
       />
-      <Pie v-else :width="470" :data="departmentData" :options="departmentChartOptions" />
+      <Pie v-else :width="370" :data="departmentData" :options="departmentChartOptions" />
     </div>
   </div>
 </template>

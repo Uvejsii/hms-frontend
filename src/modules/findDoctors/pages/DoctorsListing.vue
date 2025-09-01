@@ -4,6 +4,7 @@ import { Search, Circle, City, Clock, MapPin, Language, Calendar as CalendarIcon
 import {useQuery} from "@tanstack/vue-query";
 import {getDoctors} from "@/modules/findDoctors/sdk/api.js";
 import TableSkeleton from "@/components/TableSkeleton.vue";
+import {getDepartments} from "@/modules/admin/sdk/api.js";
 
 // State
 const searchQuery = ref('')
@@ -18,19 +19,10 @@ const { data, isLoading: doctorsLoading} = useQuery({
   queryFn: () => getDoctors(true),
 })
 
-// Filter options
-const departments = ref([
-  { name: 'Cardiology', code: 'cardiology' },
-  { name: 'Neurology', code: 'neurology' },
-  { name: 'Pediatrics', code: 'pediatrics' },
-  { name: 'Orthopedics', code: 'orthopedics' },
-  { name: 'Dermatology', code: 'dermatology' },
-  { name: 'Oncology', code: 'oncology' },
-  { name: 'Psychiatry', code: 'psychiatry' },
-  { name: 'Emergency Medicine', code: 'emergency' },
-  { name: 'Internal Medicine', code: 'internal' },
-  { name: 'Surgery', code: 'surgery' }
-])
+const { data: departments, isLoading: departmentsLoading } = useQuery({
+  queryKey: ['departments'],
+  queryFn: () => getDepartments(true),
+})
 
 const availabilityOptions = ref([
   { name: 'Available', code: true },
@@ -45,6 +37,8 @@ const experienceOptions = ref([
 ])
 
 const ratingOptions = ref([
+  { name: '3+ Stars', code: '3+' },
+  { name: '3.5+ Stars', code: '3.5+' },
   { name: '4+ Stars', code: '4+' },
   { name: '4.5+ Stars', code: '4.5+' }
 ])
@@ -66,7 +60,7 @@ const filteredDoctors = computed(() => {
   // Department filter
   if (selectedDepartment.value) {
     filtered = filtered.filter(doctor =>
-        doctor.departament.name.toLowerCase() === selectedDepartment.value
+        doctor.departament.name.toLowerCase() === selectedDepartment.value.toLowerCase()
     )
   }
 
@@ -89,10 +83,21 @@ if (selectedAvailability.value !== null) {
   // Rating filter
   if (selectedRating.value) {
     const minRating = parseFloat(selectedRating.value.replace('+', ''))
-    filtered = filtered.filter(doctor => doctor.rating >= minRating)
+    filtered = filtered.filter(doctor => doctor.reviewStarAverage >= minRating)
   }
 
   return filtered
+})
+
+const notFoundLabels = computed(() => {
+  return (
+      searchQuery.value ||
+      selectedRating.value ||
+      selectedDepartment.value ||
+      selectedAvailability.value ||
+      selectedExperience.value ||
+      ''
+  );
 })
 
 const clearFilters = () => {
@@ -139,7 +144,7 @@ const bookAppointment = (data) => {
               v-model="selectedDepartment"
               :options="departments"
               optionLabel="name"
-              optionValue="code"
+              optionValue="name"
               placeholder="All Departments"
               showClear
               class="filter-dropdown"
@@ -272,7 +277,7 @@ const bookAppointment = (data) => {
     </div>
 
     <div v-if="filteredDoctors?.length === 0" class="no-results">
-      <h3>No doctors found with "{{ searchQuery }}"</h3>
+      <h3>No doctors found with "{{ notFoundLabels }}"</h3>
       <p>Try adjusting your search criteria or filters</p>
       <Button label="Clear Filters" @click="clearFilters" class="p-button-outlined" />
     </div>

@@ -115,7 +115,7 @@
 }
 
 .admin-dashboard-chart {
-  width: 500px;
+  height: 280px !important;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -145,7 +145,7 @@
 .admin-dashboard-chart-large {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 49%;
   height: 450px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
