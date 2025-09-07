@@ -35,6 +35,8 @@ const { mutateAsync, isPending } = useMutation({
     window.localStorage.setItem('hmsUser', JSON.stringify(userData))
     if (loginResponse.role === 'Admin') {
       router.push({ name: 'admin-dashboard' })
+    } else if (loginResponse.role === 'Doctor') {
+      router.push({ name: 'doctor-dashboard' })
     } else {
       router.push({ name: 'home' })
     }
@@ -77,7 +79,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-container d-flex justify-content-center align-items-center vh-100">
+  <div class="login-container d-flex justify-content-center align-items-center">
     <div class="card login-card p-4 shadow">
       <form class="login-form" @submit.prevent="submit">
         <h1 class="text-center mb-2">Welcome back</h1>
@@ -113,6 +115,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.login-container {
+  height: calc(100vh - var(--header-height));
+}
+
 .login-card {
   max-width: 650px;
   width: 100%;

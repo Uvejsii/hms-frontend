@@ -17,3 +17,28 @@ export const getAllAppointments = async () => {
         throw new Error(`Error getting appointments: ${error}`)
     }
 }
+
+/**
+ * Edit appointment status
+ *
+ * @param {Object} data - Data to update appointment status
+ * @param {Number} data.bookingId - ID of the appointment
+ * @param {Number} data.bookingStatus - New status of the appointment
+ *
+ * @returns {Promise<Object>} - Updated appointment
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const editAppointmentStatus = async (data) => {
+    try {
+        return await api.put(`${domain}/Booking/UpdateBookingStatus`, null, {
+            params: {
+                bookingId: data.bookingId,
+                bookingStatus: data.bookingStatus
+            }
+        })
+    } catch (error) {
+        throw new Error(`Error updating appointments status: ${error}`)
+    }
+}

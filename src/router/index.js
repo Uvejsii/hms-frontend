@@ -96,6 +96,31 @@ const router = createRouter({
           component: () => import('@/modules/admin/pages/appointments/pages/AppointmentsListing.vue'),
           meta: { requiresAdmin: true },
         },
+        {
+          path: 'vacations',
+          name: 'vacations',
+          component: () => import('@/modules/admin/pages/vacations/VacationsCalendar.vue'),
+          meta: { requiresAdmin: true },
+        },
+      ]
+    },
+    {
+      path: '/doctor',
+      name: 'doctor',
+      meta: { requiresDoctor: true },
+      children: [
+        {
+          path: 'doctor-dashboard',
+          name: 'doctor-dashboard',
+          component: () => import('@/modules/doctor/pages/DoctorDashboard.vue'),
+          meta: { requiresDoctor: true },
+        },
+        {
+          path: 'doctor-appointments',
+          name: 'doctor-appointments',
+          component: () => import('@/modules/doctor/pages/DoctorAppointmentsCalendar.vue'),
+          meta: { requiresDoctor: true },
+        }
       ]
     },
   ],

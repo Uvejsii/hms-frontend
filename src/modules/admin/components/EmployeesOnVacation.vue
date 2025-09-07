@@ -41,7 +41,7 @@ const { data, isLoading, isError } = useQuery({
               <span class="table-text">{{ formatDate(data.startDate) }} - {{ formatDate(data.endDate) }}</span>
             </template>
           </Column>
-          <Column header="Vacation Type" style="width: 25%">
+          <Column header="Type" style="width: 25%">
             <template #body="{ data }">
               <span class="table-text">{{ getVacationTypeLabel(data.vacationType) }}</span>
             </template>

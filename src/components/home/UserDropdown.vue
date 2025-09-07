@@ -7,7 +7,7 @@ import {useRouter} from "vue-router";
 import { inject } from "vue";
 
 const router = useRouter();
-const { user, logout } = useUser()
+const { user, logout, userRole } = useUser()
 
 const goToAppointments = () => {
   router.push({ name: 'patient-appointments' })
@@ -29,13 +29,12 @@ const openChangePassword = () => {
             shape="circle"
             :label="user ? user?.firstName[0] + user?.lastName[0] : ''"
         />
-        <span class="user-name">{{ user?.firstName }} {{ user?.lastName }}</span>
+        <span class="user-name">
+          {{userRole === 'Doctor' ? 'Dr. ' : null }} {{ user?.firstName }} {{ user?.lastName }}
+        </span>
       </div>
     </template>
-<!--    <ActionMenuItem as="router-link" :to="{ name: 'profile' }">-->
-<!--      <User height="20" /> My Profile-->
-<!--    </ActionMenuItem>-->
-    <ActionMenuItem @click="goToAppointments()">
+    <ActionMenuItem v-if="userRole !== 'Doctor'" @click="goToAppointments()">
       <Calendar /> Appointments
     </ActionMenuItem>
     <ActionMenuItem @click="openChangePassword()">

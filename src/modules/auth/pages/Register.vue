@@ -100,7 +100,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-container d-flex justify-content-center align-items-center vh-100">
+  <div class="login-container d-flex justify-content-center align-items-center">
     <div class="card login-card p-4 shadow">
       <form class="login-form" @submit.prevent="submit">
         <h1 class="text-center mb-2">Register</h1>
@@ -136,6 +136,10 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.login-container {
+  height: calc(100vh - var(--header-height));
+}
+
 .login-card {
   max-width: 650px;
   width: 100%;

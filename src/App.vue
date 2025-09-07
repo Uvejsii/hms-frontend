@@ -7,8 +7,9 @@ import { IconoirProvider } from '@iconoir/vue'
 import Header from "@/components/Header.vue";
 import {useUser} from "@/modules/auth/sdk/user.js";
 import AdminSideBar from "@/components/AdminSideBar.vue";
+import DoctorSidebar from "@/modules/admin/components/DoctorSidebar.vue";
 
-const { isUserLoggedIn, userRole } = useUser();
+const { userRole } = useUser();
 </script>
 
 <template>
@@ -16,10 +17,14 @@ const { isUserLoggedIn, userRole } = useUser();
     <Popups>
       <VueQueryDevtools />
       <Toast/>
-      <Header v-if="isUserLoggedIn" :class="{'hms-header': userRole === 'Admin'}" />
+      <Header :class="{'hms-header': userRole === 'Admin' || userRole === 'Doctor'}" />
       <div class="d-flex">
         <AdminSideBar v-if="userRole === 'Admin'" />
-        <div class="container-fluid my-3" :class="{'main-content': userRole === 'Admin'}">
+        <DoctorSidebar v-if="userRole === 'Doctor'" />
+        <div
+            class="container-fluid"
+            :class="{'main-content': userRole === 'Admin' || userRole === 'Doctor'}"
+        >
           <RouterView />
         </div>
       </div>

@@ -2,41 +2,15 @@
 import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { Bell, MessageText, Calendar, WarningTriangle } from '@iconoir/vue'
 import UserDropdown from "@/components/home/UserDropdown.vue";
+import { useUser } from "@/modules/auth/sdk/user.js";
+import {useRouter} from "vue-router";
 
-// References
-const userMenu = ref(null)
+const router = useRouter()
+const { user } = useUser()
 
 // State
 const userMenuVisible = ref(false)
 const showNotifications = ref(false)
-
-// Menu items
-const userMenuItems = [
-  {
-    label: 'My Profile',
-    icon: 'pi pi-user',
-    command: () => {
-      // Navigate to profile page
-    }
-  },
-  {
-    label: 'Account Settings',
-    icon: 'pi pi-cog',
-    command: () => {
-      // Navigate to settings page
-    }
-  },
-  {
-    separator: true
-  },
-  {
-    label: 'Logout',
-    icon: 'pi pi-sign-out',
-    command: () => {
-      window.location.href = '/login'
-    }
-  }
-]
 
 // Sample notifications data
 const notifications = [
@@ -89,6 +63,10 @@ const handleClickOutside = (event) => {
   }
 }
 
+const goToLogin = (router) => {
+  router.push({ name: 'login' })
+}
+
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 })
@@ -108,7 +86,7 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="topbar-right">
+    <div class="topbar-right" v-if="user?.id">
       <div class="topbar-actions">
         <span v-tooltip.bottom="'Notifications'">
           <Bell height="20" @click="showNotifications = true" class="cursor-pointer"/>
@@ -119,9 +97,14 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
+    <Button
+        v-else
+        @click="goToLogin(router)"
+        label="Login or Register"
+    />
 
     <!-- Notifications Overlay -->
-    <Dialog v-model:visible="showNotifications" header="Notifications" modal style="width: 30rem">
+    <Dialog v-if="user?.id" v-model:visible="showNotifications" header="Notifications" modal style="width: 30rem">
       <div class="notifications-container">
         <div v-for="notification in notifications" :key="notification.id" class="notification-item">
           <div class="notification-icon" :class="notification.type">
@@ -151,7 +134,7 @@ onUnmounted(() => {
   padding: var(--spacing-md) var(--spacing-lg);
   background-color: var(--surface-card);
   border-bottom: 1px solid var(--surface-border);
-  height: 64px;
+  height: var(--header-height);
   z-index: 1000;
 }
 
