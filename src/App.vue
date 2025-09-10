@@ -18,7 +18,7 @@ const { userRole } = useUser();
       <VueQueryDevtools />
       <Toast/>
       <Header :class="{'hms-header': userRole === 'Admin' || userRole === 'Doctor'}" />
-      <div class="d-flex">
+      <div class="d-flex mx-2 my-3">
         <AdminSideBar v-if="userRole === 'Admin'" />
         <DoctorSidebar v-if="userRole === 'Doctor'" />
         <div

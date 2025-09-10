@@ -55,6 +55,7 @@ const events = computed(() => {
       status: booking.status,
       description: booking.notes,
       bookingId: booking.id,
+      bookingPerscription: booking.prescription,
       extendedProps: {
         user: `${booking.user.firstName} ${booking.user.lastName}`,
         phone: booking.contactPhoneNumber,
@@ -78,7 +79,7 @@ const calendarOptions = computed(() => ({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: 'dayGridMonth',
   events: events.value,
-  dayMaxEventRows: true,
+  dayMaxEventRows: 2,
   eventClick: ({ event }) => {
     openEditAppointmentStatusPopup(event._def)
   },
@@ -126,6 +127,7 @@ const calendarOptions = computed(() => ({
             </li>
           </ul>
         </div>
+        <div v-else>No appointments for this month</div>
       </div>
     </div>
     <div class="calendar-main__right-container">
@@ -189,7 +191,7 @@ const calendarOptions = computed(() => ({
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s ease;
-  z-index: 9999;  /* Ensure it's above the calendar */
+  z-index: 9999;
   width: 100%;
 }
 
@@ -252,8 +254,6 @@ const calendarOptions = computed(() => ({
 
 /* Event styling */
 .calendar-event {
-  padding: 3px;
-  border: 1px solid transparent;
   border-radius: 5px;
   text-align: center;
   font-size: 0.9rem;

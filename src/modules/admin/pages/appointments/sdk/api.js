@@ -24,6 +24,7 @@ export const getAllAppointments = async () => {
  * @param {Object} data - Data to update appointment status
  * @param {Number} data.bookingId - ID of the appointment
  * @param {Number} data.bookingStatus - New status of the appointment
+ * @param {String} data.bookingPrescription - Prescription of the appointment
  *
  * @returns {Promise<Object>} - Updated appointment
  *
@@ -32,11 +33,10 @@ export const getAllAppointments = async () => {
 
 export const editAppointmentStatus = async (data) => {
     try {
-        return await api.put(`${domain}/Booking/UpdateBookingStatus`, null, {
-            params: {
-                bookingId: data.bookingId,
-                bookingStatus: data.bookingStatus
-            }
+        return await api.put(`${domain}/Booking/UpdateBookingStatus`, {
+            id: data.bookingId,
+            status: data.bookingStatus,
+            prescription: data.bookingPrescription || ''
         })
     } catch (error) {
         throw new Error(`Error updating appointments status: ${error}`)

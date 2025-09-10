@@ -1,12 +1,11 @@
 <script setup>
-import { markRaw, ref } from 'vue'
+import {markRaw, ref, watch} from 'vue'
 import { useField, useForm } from 'vee-validate'
 import * as yup from 'yup'
 import { useToast } from 'primevue/usetoast'
-import Dialog from "primevue/dialog";
-import Button from "primevue/button";
+import Select from "primevue/select";
+import Textarea from "primevue/textarea";
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
-import {Select} from "primevue";
 import {editAppointmentStatus} from "@/modules/admin/pages/appointments/sdk/api.js";
 
 const visible = ref(true)
@@ -18,18 +17,29 @@ const { validate, errors, values } = useForm({
   validationSchema: yup.object({
     bookingId: yup.string().required('Appointment id is required'),
     bookingStatus: yup.string().required('Appointment status is required'),
+    bookingPrescription: yup.string().when('bookingStatus', {
+      is: 3,
+      then: (schema) => schema.required('Prescription is required'),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   }),
   initialValues: {
     bookingId: props.data.extendedProps.bookingId,
     bookingStatus: props.data.extendedProps.status,
+    bookingPrescription: props.data.extendedProps.bookingPerscription || '',
   }
 })
 
+const { value: bookingStatus } = useField('bookingStatus');
+const { value: bookingPrescription } = useField('bookingPrescription');
+
 const fields = ref([
   {
+    name: 'bookingStatus',
     fieldLabel: 'Appointment status',
-    ...useField('bookingStatus'),
+    value: bookingStatus,
     component: markRaw(Select),
+    classes: 'form-grid__item--full-row',
     props: {
       placeholder: 'Select Status',
       options: [
@@ -44,6 +54,28 @@ const fields = ref([
     },
   },
 ])
+
+watch(bookingStatus, async (newValue) => {
+  const hasPrescriptionField = fields.value.some(field => field.name === 'bookingPrescription');
+  if (newValue === 3 && !hasPrescriptionField) {
+    fields.value.push({
+      name: 'bookingPrescription',
+      fieldLabel: 'Prescription',
+      value: bookingPrescription,
+      component: markRaw(Textarea),
+      classes: 'form-grid__item--full-row',
+      props: {
+        placeholder: 'Enter prescription notes...',
+        rows: 5,
+        autoResize: true,
+      },
+    });
+  } else if (newValue !== 3 && hasPrescriptionField) {
+    fields.value = fields.value.filter(field => field.name !== 'bookingPrescription');
+  }
+
+  await validate();
+}, { immediate: true });
 
 const queryClient = useQueryClient()
 const { mutate, isPending } = useMutation({

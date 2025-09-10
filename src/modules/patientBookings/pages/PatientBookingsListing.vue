@@ -116,6 +116,7 @@ const calendarOptions = computed(() => ({
             </li>
           </ul>
         </div>
+        <div v-else>No appointments for this month</div>
       </div>
     </div>
     <div class="calendar-main__right-container">

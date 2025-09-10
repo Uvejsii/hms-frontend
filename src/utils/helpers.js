@@ -74,7 +74,7 @@ export const generatePrescription = (data) => {
     doc.text(`Dr. ${data.doctor.firstName} ${data.doctor.lastName}`, docWidth - 10, 20, { align: 'right' });
     doc.setFontSize(10);
     doc.setTextColor('#333333');
-    doc.text('General Physician, Internal Medicine Specialist', docWidth - 10, 27, { align: 'right' });
+    doc.text(data.doctor.departament.name, docWidth - 10, 27, { align: 'right' });
     doc.setFontSize(8);
     doc.setTextColor('#666666');
     doc.text(`${data.doctor.email}`, docWidth - 10, 32, { align: 'right' });
@@ -112,6 +112,16 @@ export const generatePrescription = (data) => {
     doc.setFontSize(18);
     doc.setTextColor(secondaryDark);
     doc.text('Prescription', docWidth / 2 + 10, contentY);
+
+    const prescriptionYStart = contentY + 10;
+    doc.setFontSize(10);
+    doc.setTextColor('#333333');
+    const prescriptionText = data.prescription || "No prescription provided.";
+
+    const prescriptionXStart = docWidth / 2 + 10;
+    const prescriptionMaxWidth = docWidth / 2 - 20;
+
+    doc.text(prescriptionText, prescriptionXStart, prescriptionYStart, { maxWidth: prescriptionMaxWidth });
 
     const footerY = docHeight - 20;
     doc.setFillColor(secondaryLight);
