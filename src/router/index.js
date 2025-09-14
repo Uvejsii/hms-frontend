@@ -120,7 +120,19 @@ const router = createRouter({
           name: 'doctor-appointments',
           component: () => import('@/modules/doctor/pages/DoctorAppointmentsCalendar.vue'),
           meta: { requiresDoctor: true },
-        }
+        },
+        {
+          path: 'doctor-patients',
+          name: 'doctor-patients',
+          component: () => import('@/modules/doctor/pages/DoctorPatientsListing.vue'),
+          meta: { requiresDoctor: true },
+        },
+        {
+          path: 'doctor-vacations',
+          name: 'doctor-vacations',
+          component: () => import('@/modules/doctor/pages/DoctorVacationsListing.vue'),
+          meta: { requiresDoctor: true },
+        },
       ]
     },
   ],

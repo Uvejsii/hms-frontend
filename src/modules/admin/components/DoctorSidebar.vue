@@ -3,9 +3,9 @@ import { GraphUp, Community, Calendar, Airplane } from '@iconoir/vue'
 
 const routes = [
   { name: 'Dashboard', path: '/doctor/doctor-dashboard', icon: GraphUp },
-  // { name: 'Patients', path: '/doctor/patients', icon: Community },
   { name: 'Appointments', path: '/doctor/doctor-appointments', icon: Calendar },
-  // { name: 'Vacations', path: '/doctor/vacations', icon: Airplane },
+  { name: 'Patients', path: '/doctor/doctor-patients', icon: Community },
+  { name: 'Vacations', path: '/doctor/doctor-vacations', icon: Airplane },
 ]
 </script>
 

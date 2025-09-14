@@ -1,6 +1,4 @@
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
-import { Bell, MessageText, Calendar, WarningTriangle } from '@iconoir/vue'
 import UserDropdown from "@/components/home/UserDropdown.vue";
 import { useUser } from "@/modules/auth/sdk/user.js";
 import {useRouter} from "vue-router";
@@ -8,72 +6,10 @@ import {useRouter} from "vue-router";
 const router = useRouter()
 const { user } = useUser()
 
-// State
-const userMenuVisible = ref(false)
-const showNotifications = ref(false)
-
-// Sample notifications data
-const notifications = [
-  {
-    id: 1,
-    type: 'appointment',
-    title: 'New Appointment',
-    message: 'Patient John Doe scheduled for 2:00 PM today',
-    time: '15 minutes ago'
-  },
-  {
-    id: 2,
-    type: 'alert',
-    title: 'Lab Results',
-    message: 'Lab results for patient Sarah Smith are ready',
-    time: '1 hour ago'
-  },
-  {
-    id: 3,
-    type: 'message',
-    title: 'New Message',
-    message: 'Dr. Rodriguez: Can we discuss the treatment plan?',
-    time: '3 hours ago'
-  }
-]
-
-
-const notificationIcon = (type) => {
- switch (type) {
-   case 'appointment': return Calendar
-   case 'alert': return WarningTriangle
-   case 'message': return MessageText
-   default: return Bell
- }
-}
-
-// Show/hide user menu
-watch(userMenuVisible, (value) => {
-  if (value) {
-    nextTick(() => {
-      toggleUserMenu(event)
-    })
-  }
-})
-
-// Add click outside listener
-const handleClickOutside = (event) => {
-  if (userMenuVisible.value && !event.target.closest('.user-profile') && !event.target.closest('.p-menu')) {
-    userMenuVisible.value = false
-  }
-}
 
 const goToLogin = (router) => {
   router.push({ name: 'login' })
 }
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
 </script>
 
 <template>
@@ -88,10 +24,6 @@ onUnmounted(() => {
 
     <div class="topbar-right" v-if="user?.id">
       <div class="topbar-actions">
-        <span v-tooltip.bottom="'Notifications'">
-          <Bell height="20" @click="showNotifications = true" class="cursor-pointer"/>
-        </span>
-
         <div class="user-profile">
           <UserDropdown />
         </div>
@@ -102,27 +34,6 @@ onUnmounted(() => {
         @click="goToLogin(router)"
         label="Login or Register"
     />
-
-    <!-- Notifications Overlay -->
-    <Dialog v-if="user?.id" v-model:visible="showNotifications" header="Notifications" modal style="width: 30rem">
-      <div class="notifications-container">
-        <div v-for="notification in notifications" :key="notification.id" class="notification-item">
-          <div class="notification-icon" :class="notification.type">
-            <component :is="notificationIcon(notification.type)" :height="20" />
-          </div>
-          <div class="notification-content">
-            <div class="notification-title">{{ notification.title }}</div>
-            <div class="notification-message">{{ notification.message }}</div>
-            <div class="notification-time">{{ notification.time }}</div>
-          </div>
-        </div>
-
-        <div class="notification-actions">
-          <Button label="Mark all as read" text class="p-button-text" />
-          <Button label="View all" text class="p-button-text" />
-        </div>
-      </div>
-    </Dialog>
   </header>
 </template>
 
