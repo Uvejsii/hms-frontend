@@ -17,6 +17,11 @@ const router = createRouter({
       component: () => import('@/modules/auth/pages/Login.vue'),
     },
     {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/PageNotFound.vue')
+    },
+    {
       path: '/',
       name: 'home',
       component: () => import('@/modules/findDoctors/pages/DoctorsListing.vue'),
@@ -131,6 +136,12 @@ const router = createRouter({
           path: 'doctor-vacations',
           name: 'doctor-vacations',
           component: () => import('@/modules/doctor/pages/DoctorVacationsListing.vue'),
+          meta: { requiresDoctor: true },
+        },
+        {
+          path: 'doctor-chat-hub',
+          name: 'doctor-chat-hub',
+          component: () => import('@/modules/doctor/pages/ChatHub.vue'),
           meta: { requiresDoctor: true },
         },
       ]

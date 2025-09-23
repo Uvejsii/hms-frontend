@@ -4,7 +4,7 @@ const domain = import.meta.env.VITE_HMS_API_URL
 
 /**
  * Get all doctors
- * @param {String} status - status of the doctor to fetch
+ * @param {Boolean} status - status of the doctor to fetch
  * @returns {Promise<Array>} - Array of doctors
  *
  * @throws {Error} - When the response status is not 200

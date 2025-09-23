@@ -129,9 +129,10 @@ const openRequestVacation = (data) => {
           <template #content>
             <div class="d-flex flex-column align-items-center p-1">
               <div class="mb-4">
-                <Tag :value="`${vacation.approvedRequestedDays} / 20`"
-                     :severity="getVacationComponentColor(vacation.vacationType)"
-                     class="fs-6 fw-bold px-4 py-1 rounded-pill shadow-sm" />
+                <Tag
+                    :value="`${vacation.approvedRequestedDays} / ${vacation.vacationType !== 2 ? 20 : '&infin;'}`"
+                    :severity="getVacationComponentColor(vacation.vacationType)"
+                    class="fs-6 fw-bold px-4 py-1 rounded-pill shadow-sm" />
               </div>
               <div class="w-100">
                 <ProgressBar :value="getProgressBarValue(vacation.approvedRequestedDays, 20)"

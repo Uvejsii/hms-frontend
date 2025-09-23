@@ -1,12 +1,41 @@
 <script setup>
-import { GraphUp, Community, Calendar, Airplane } from '@iconoir/vue'
+import { GraphUp, Community, Calendar, Airplane, ChatBubbleEmpty } from '@iconoir/vue'
+import { useToast } from "primevue/usetoast";
+import * as signalR from "@microsoft/signalr";
+import { onMounted } from "vue";
+import { useUser } from '@/modules/auth/sdk/user.js';
+
+const { user } = useUser();
+const toast = useToast();
+let connection;
 
 const routes = [
   { name: 'Dashboard', path: '/doctor/doctor-dashboard', icon: GraphUp },
   { name: 'Appointments', path: '/doctor/doctor-appointments', icon: Calendar },
   { name: 'Patients', path: '/doctor/doctor-patients', icon: Community },
   { name: 'Vacations', path: '/doctor/doctor-vacations', icon: Airplane },
+  { name: 'Chat', path: '/doctor/doctor-chat-hub', icon: ChatBubbleEmpty },
 ]
+
+onMounted(() => {
+  connection = new signalR.HubConnectionBuilder()
+      .withUrl("http://localhost:5233/chatHub", {
+        accessTokenFactory: () => user.value?.token,
+        withCredentials: true
+      })
+      .withAutomaticReconnect()
+      .build();
+
+  connection.start().then(() => {
+    console.log("Connected to ChatHub");
+  }).catch(err => console.error(err.toString()));
+
+  connection.on("ReceiveMessage", (senderId, receiverId, message) => {
+    if (receiverId === user.value?.id) {
+      toast.add({severity:'info', summary: 'New Message', detail: message, life: 8000});
+    }
+  });
+});
 </script>
 
 <template>
