@@ -79,55 +79,90 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-container d-flex justify-content-center align-items-center">
-    <div class="card login-card p-4 shadow">
-      <form class="login-form" @submit.prevent="submit">
-        <h1 class="text-center mb-2">Welcome back</h1>
-        <p class="text-center text-muted mb-4">Please enter your details to log in</p>
-        <div class="form-grid">
-          <div v-for="field in fields" :key="field.name" class="form-grid__item form-grid__item--full-row">
-            <label class="form-grid__label" :for="field.name">{{ field.fieldLabel }}</label>
-            <component
-                :is="field.component"
-                v-model="field.value"
-                :id="field.name"
-                class="w-100"
-                v-bind="field.props"
-            />
-            <small class="form-grid__error">{{ errors[field.name] }}</small>
+  <div class="login-page">
+    <div class="login-image"></div>
+    <div class="login-form-container d-flex justify-content-center align-items-center">
+      <div class="card login-card p-5 shadow">
+        <form class="login-form" @submit.prevent="submit">
+          <h1 class="text-center mb-2">Welcome back</h1>
+          <p class="text-center text-muted mb-4">Please enter your details to log in</p>
+          <div class="form-grid">
+            <div v-for="field in fields" :key="field.name" class="form-grid__item form-grid__item--full-row">
+              <label class="form-grid__label fw-semibold mb-1" :for="field.name">
+                {{ field.fieldLabel }}
+              </label>
+              <component
+                  :is="field.component"
+                  v-model="field.value"
+                  :id="field.name"
+                  class="w-100"
+                  v-bind="field.props"
+              />
+              <small class="form-grid__error">{{ errors[field.name] }}</small>
+            </div>
           </div>
-          <p class="form-grid__item--full-row m-0">Dont have an account? Click
-            <RouterLink to="/register">here to register</RouterLink>
+          <p class="text-center mt-3">
+            Don’t have an account?
+            <RouterLink to="/register" class="register-link">Register here</RouterLink>
           </p>
-        </div>
-        <span v-if="loginErrors && !isPending" class="form-grid__error">
-          {{ loginErrors }}
-        </span>
-        <Button
-            @click="submit"
-            :loading="isPending"
-            class="form-grid__item--full-row mt-4"
-            label="Login"
-        />
-      </form>
+          <span v-if="loginErrors && !isPending" class="form-grid__error text-center d-block mt-2">
+            {{ loginErrors }}
+          </span>
+          <Button
+              @click="submit"
+              :loading="isPending"
+              class="w-100 mt-2 modern-btn"
+              label="Login"
+          />
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.login-container {
-  height: calc(100vh - var(--header-height));
+.login-page {
+  display: flex;
+  height: calc(95vh - var(--header-height));
+  width: 100%;
+}
+
+.login-image {
+  flex: 1;
+  background: url('@/assets/login-image-hms.jpeg') no-repeat center center;
+  background-size: cover;
+}
+
+.login-form-container {
+  flex: 1;
 }
 
 .login-card {
-  max-width: 650px;
   width: 100%;
-  border-radius: 12px;
-  background: white;
+  max-width: 400px;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
+.form-grid__label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.form-grid__error {
+  font-size: 0.8rem;
+  color: #e74c3c;
+}
+
+.register-link {
+  font-weight: 600;
+  color: #28a745;
+  text-decoration: none;
+}
+
+.register-link:hover {
+  text-decoration: underline !important;
 }
 </style>

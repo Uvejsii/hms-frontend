@@ -29,6 +29,7 @@ export const setupAxiosInterceptors = () => {
 
                 if (router) {
                     await router.push({ name: 'login' })
+                    window.location.reload()
                 } else {
                     window.location.href = '/login'
                 }

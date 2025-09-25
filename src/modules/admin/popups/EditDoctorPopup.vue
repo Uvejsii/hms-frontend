@@ -6,7 +6,7 @@ import { useToast } from 'primevue/usetoast'
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
-import {InputText, InputNumber} from "primevue";
+import {InputText, InputNumber, Select} from "primevue";
 import {addDoctor, editDoctor} from "@/modules/admin/sdk/api.js";
 import DepartmentSelect from "@/modules/admin/fields/DepartmentSelect.vue";
 import FileUpload from "@/components/FileUpload.vue";

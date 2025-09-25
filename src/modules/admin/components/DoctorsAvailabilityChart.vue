@@ -19,13 +19,21 @@ const { data: unavailableDoctorsCount, isLoading: isUnavailableDoctorsCountLoadi
 });
 
 const chartData = computed(() => {
-  if (availableDoctorsCount.value && unavailableDoctorsCount.value) {
+  if (
+      availableDoctorsCount.value !== undefined &&
+      availableDoctorsCount.value !== null &&
+      unavailableDoctorsCount.value !== undefined &&
+      unavailableDoctorsCount.value !== null
+  ) {
     return {
-      labels: [`Available Doctors (${availableDoctorsCount.value})`, `Unavailable Doctors (${unavailableDoctorsCount.value})`],
+      labels: [
+        `Available Doctors (${availableDoctorsCount.value})`,
+        `Unavailable Doctors (${unavailableDoctorsCount.value})`
+      ],
       datasets: [
         {
           rotation: Math.PI - 40,
-          data: [availableDoctorsCount, unavailableDoctorsCount],
+          data: [availableDoctorsCount.value, unavailableDoctorsCount.value],
           backgroundColor: ['#40ed50', '#e63131'],
           hoverBackgroundColor: ['#a2f3aa', '#f66d6d'],
         },

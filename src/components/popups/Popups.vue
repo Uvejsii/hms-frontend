@@ -69,6 +69,12 @@ const EditAppointmentStatusPopup = defineAsyncComponent(
 const RequestVacationPopup = defineAsyncComponent(
     () => import('@/modules/doctor/popups/RequestVacationPopup.vue')
 )
+const DownloadAppointmentInfoPopup = defineAsyncComponent(
+    () => import('@/modules/patientBookings/popups/DownloadAppointmentInfoPopup.vue')
+)
+const AddAdminPopup = defineAsyncComponent(
+    () => import('@/modules/admin/popups/AddAdminPopup.vue')
+)
 
 const popups = reactive([])
 
@@ -122,6 +128,8 @@ provide('showDoctorsVacationsSidebarPopup', (data) => showPopup(markRaw(DoctorsV
 provide('showUpdateVacationStatusPopup', (data) => showPopup(markRaw(UpdateVacationStatusPopup), data))
 provide('showEditAppointmentStatusPopup', (data) => showPopup(markRaw(EditAppointmentStatusPopup), data))
 provide('showRequestVacationPopup', (data) => showPopup(markRaw(RequestVacationPopup), data))
+provide('showDownloadAppointmentInfoPopup', (data) => showPopup(markRaw(DownloadAppointmentInfoPopup), data))
+provide('showAddAdminPopup', (data) => showPopup(markRaw(AddAdminPopup), data))
 </script>
 
 <template>

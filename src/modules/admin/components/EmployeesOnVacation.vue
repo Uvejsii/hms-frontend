@@ -3,10 +3,19 @@ import TableSkeleton from "@/components/TableSkeleton.vue";
 import {useQuery} from "@tanstack/vue-query";
 import {getAllApprovedVacationRequests} from "@/modules/admin/sdk/api.js";
 import {formatDate, getVacationTypeLabel} from "@/utils/helpers.js";
+import moment from "moment";
+
+const today = moment().startOf("day")
 
 const { data, isLoading, isError } = useQuery({
   queryKey: ['employees-on-vacation'],
   queryFn: () => getAllApprovedVacationRequests(),
+  select: (data) => {
+    return data.filter(vacation => {
+      const endDate = moment(vacation.endDate)
+      return endDate.isSameOrAfter(today, 'day')
+    })
+  }
 })
 </script>
 
@@ -16,13 +25,8 @@ const { data, isLoading, isError } = useQuery({
       <p>Employees on vacation</p>
     </div>
     <div>
-      <TableSkeleton
-          v-if="false"
-          rows="10"
-          columns="1"
-      />
       <div>
-        <DataTable :value="data" paginator :rows="5">
+        <DataTable :value="data" paginator :rows="3">
           <Column field="" header="Doctor" style="width: 30%">
             <template #body="{ data }">
               <div class="doctor-wrapper">

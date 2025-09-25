@@ -57,7 +57,7 @@ const { data: appointments, isLoading: IsAppointmentsLoading, isError: isAppoint
         <span class="notes-ellipsis" v-tooltip.top="data.notes">{{ data.notes || 'No notes provided' }}</span>
       </template>
     </Column>
-    <Column header="status">
+    <Column header="Status">
       <template #body="{ data }">
         <span>{{ getStatusLabel(data.status) }}</span>
       </template>
@@ -69,14 +69,20 @@ const { data: appointments, isLoading: IsAppointmentsLoading, isError: isAppoint
     </Column>
     <Column header="Actions">
       <template #body="{ data }">
-        <ActionMenu>
-          <ActionMenuItem @click="generateInvoice(data)">
-            <Download /> Download Invoice
-          </ActionMenuItem>
-          <ActionMenuItem @click="generatePrescription(data)">
-            <Download /> Download Prescription
-          </ActionMenuItem>
-        </ActionMenu>
+        <div v-if="data.status !== 3" v-tooltip.top="'Status needs to be Finished to enable actions'">
+          <ActionMenu class="disabled-action-menu">
+          </ActionMenu>
+        </div>
+        <div v-else>
+          <ActionMenu>
+            <ActionMenuItem @click="generateInvoice(data)">
+              <Download /> Download Invoice
+            </ActionMenuItem>
+            <ActionMenuItem @click="generatePrescription(data)">
+              <Download /> Download Prescription
+            </ActionMenuItem>
+          </ActionMenu>
+        </div>
       </template>
     </Column>
     <template #empty>
@@ -99,5 +105,10 @@ const { data: appointments, isLoading: IsAppointmentsLoading, isError: isAppoint
   overflow: hidden;
   text-overflow: ellipsis;
   vertical-align: middle;
+}
+
+.disabled-action-menu {
+  cursor: not-allowed;
+  pointer-events: none;
 }
 </style>

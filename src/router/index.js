@@ -27,11 +27,6 @@ const router = createRouter({
       component: () => import('@/modules/findDoctors/pages/DoctorsListing.vue'),
     },
     {
-      path: '/profile',
-      name: 'profile',
-      component: () => import('@/modules/profile/pages/ProfilePage.vue'),
-    },
-    {
       path: '/patient-appointments',
       name: 'patient-appointments',
       component: () => import('@/modules/patientBookings/pages/PatientBookingsListing.vue'),
@@ -96,6 +91,12 @@ const router = createRouter({
           meta: { requiresAdmin: true },
         },
         {
+          path: 'admins',
+          name: 'admins',
+          component: () => import('@/modules/admin/pages/admins/AdminsListing.vue'),
+          meta: { requiresAdmin: true },
+        },
+        {
           path: 'appointments',
           name: 'appointments',
           component: () => import('@/modules/admin/pages/appointments/pages/AppointmentsListing.vue'),
@@ -152,8 +153,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (!isUserLoggedIn && to.name !== 'login' && to.name !== 'register') {
     next({ name: 'login' })
-  } else if (to.matched.some(record => record.meta.requiresAdmin)) {
-    if (isUserLoggedIn && userRole.value === 'Admin') {
+  } else if (to.matched.some(record => record.meta.requiresAdmin || record.meta.requiresDoctor)) {
+    if (isUserLoggedIn && (userRole.value === 'Admin' || userRole.value === 'Doctor')) {
       next()
     } else {
       next({ name: 'home' })

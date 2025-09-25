@@ -54,7 +54,7 @@ const fields = ref([
   {
     fieldLabel: 'First name',
     ...useField('firstName'),
-    component: markRaw(InputText)
+    component: markRaw(InputText),
   },
   {
     fieldLabel: 'Last name',
@@ -64,7 +64,7 @@ const fields = ref([
   {
     fieldLabel: 'Email',
     ...useField('email'),
-    component: markRaw(InputText)
+    component: markRaw(InputText),
   },
   {
     fieldLabel: 'Password',
@@ -79,6 +79,7 @@ const fields = ref([
     fieldLabel: 'Confirm password',
     ...useField('confirmPassword'),
     component: markRaw(Password),
+    classes: 'form-grid__item--full-row',
     props: {
       feedback: false,
       toggleMask: true
@@ -100,55 +101,95 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="login-container d-flex justify-content-center align-items-center">
-    <div class="card login-card p-4 shadow">
-      <form class="login-form" @submit.prevent="submit">
-        <h1 class="text-center mb-2">Register</h1>
-        <p class="text-center text-muted mb-4">Please enter your details to register</p>
-        <div class="form-grid">
-          <div v-for="field in fields" :key="field.name" class="form-grid__item form-grid__item--full-row">
-            <label class="form-grid__label" :for="field.name">{{ field.fieldLabel }}</label>
-            <component
-                :is="field.component"
-                v-model="field.value"
-                :id="field.name"
-                class="w-100"
-                v-bind="field.props"
-            />
-            <small class="form-grid__error">{{ errors[field.name] }}</small>
+  <div class="register-page">
+    <!-- Left side hospital image -->
+    <div class="register-image"></div>
+
+    <!-- Right side with form -->
+    <div class="register-form-container d-flex justify-content-center align-items-center">
+      <div class="card register-card p-5 shadow">
+        <form class="register-form" @submit.prevent="submit">
+          <h1 class="text-center mb-2">Create an account</h1>
+          <p class="text-center text-muted mb-4">Join our hospital system and manage your health better</p>
+
+          <div class="form-grid">
+            <div v-for="field in fields" :key="field.name" class="form-grid__item" :class="field.classes">
+              <label class="form-grid__label fw-semibold mb-1" :for="field.name">{{ field.fieldLabel }}</label>
+              <component
+                  :is="field.component"
+                  v-model="field.value"
+                  :id="field.name"
+                  class="w-100"
+                  v-bind="field.props"
+              />
+              <small class="form-grid__error">{{ errors[field.name] }}</small>
+            </div>
           </div>
-          <p class="form-grid__item--full-row m-0">Already have an account? Click
-            <RouterLink to="/login">here to login</RouterLink>
+
+          <p class="text-center mt-3">
+            Already have an account?
+            <RouterLink to="/login" class="login-link">Login here</RouterLink>
           </p>
-        </div>
-        <span v-if="loginErrors && !isPending" class="form-grid__error">
-          {{ loginErrors }}
-        </span>
-        <Button
-            @click="submit"
-            :loading="isPending"
-            class="form-grid__item--full-row mt-4"
-            label="Register"
-        />
-      </form>
+
+          <span v-if="loginErrors && !isPending" class="form-grid__error text-center d-block mt-2">
+            {{ loginErrors }}
+          </span>
+
+          <Button
+              @click="submit"
+              :loading="isPending"
+              class="w-100 mt-4 modern-btn"
+              label="Register"
+          />
+        </form>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.login-container {
-  height: calc(100vh - var(--header-height));
-}
-
-.login-card {
-  max-width: 650px;
-  width: 100%;
-  border-radius: 12px;
-  background: white;
-}
-
-.login-form {
+.register-page {
   display: flex;
-  flex-direction: column;
+  height: calc(95vh - var(--header-height));
+  width: 100%;
+}
+
+.register-image {
+  flex: 1;
+  background: url("@/assets/login-image-hms.jpeg") no-repeat center center;
+  background-size: cover;
+}
+
+.register-form-container {
+  flex: 1;
+}
+
+.register-card {
+  width: 100%;
+  max-width: 550px;
+  border-radius: 16px;
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.form-grid__label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.form-grid__error {
+  font-size: 0.8rem;
+  color: #e74c3c;
+}
+
+.login-link {
+  font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link:hover {
+  text-decoration: underline !important;
 }
 </style>

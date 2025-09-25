@@ -5,6 +5,7 @@ import * as signalR from "@microsoft/signalr";
 import {useMutation, useQuery, useQueryClient} from "@tanstack/vue-query";
 import { useUser } from "@/modules/auth/sdk/user.js";
 import {getAllAppUserDoctors, getChatMessages, sendChatMessage} from "@/modules/doctor/sdk/api.js";
+import moment from "moment";
 
 const { user } = useUser();
 const search = ref("");
@@ -194,14 +195,25 @@ watch(drChat, async () => {
                 />
 
                 <div
-                    :class="['p-2 shadow-sm',
-                    isMine(msg.senderId)
-                    ? 'bg-success text-white my-message-container' : 'receiver-message-container bg-light']"
+                    :class="[
+                      'p-2 shadow-sm d-flex flex-column',
+                      isMine(msg.senderId)
+                      ? 'bg-success text-white my-message-container'
+                      : 'receiver-message-container bg-light'
+                    ]"
                     style="max-width: 70%;"
                 >
-                  {{ msg.message }}
+                  <div>{{ msg.message }}</div>
+                  <small
+                      :class="[
+                      'align-self-end',
+                      isMine(msg.senderId) ? 'text-white' : 'text-muted'
+                      ]"
+                      style="font-size: 0.75rem;"
+                  >
+                    {{ moment.utc(msg.sentAt).local().format("HH:mm") }}
+                  </small>
                 </div>
-
                 <Avatar
                     v-if="isMine(msg.senderId)"
                     :image="user?.profileImage"
@@ -221,7 +233,7 @@ watch(drChat, async () => {
                 placeholder="Write your message..."
                 @keyup.enter="mutate"
             />
-            <Button class="btn btn-primary" @click="mutate" :disabled="isPending"><Send /></Button>
+            <Button @click="mutate" :disabled="isPending"><Send /></Button>
           </div>
         </div>
         <div v-else class="d-flex flex-column justify-content-center align-items-center h-100">

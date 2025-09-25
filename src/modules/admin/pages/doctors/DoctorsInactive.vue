@@ -70,18 +70,6 @@ const openUpdateDoctorStatusPopup = (data) => {
       </template>
     </Column>
     <Column header="Phone number" field="phoneNumber" />
-    <Column header="Available">
-      <template #body="{ data }">
-        <Tag :severity="data?.isAvailable ? 'success' : 'danger'">
-          <span v-if="data?.isAvailable" class="d-flex gap-2 align-items-center">
-            <Check /> Yes
-          </span>
-          <span v-else class="d-flex gap-2 align-items-center">
-            <Xmark class="mr-2" /> No
-          </span>
-        </Tag>
-      </template>
-    </Column>
     <Column header="Actions">
       <template #body="{ data }">
         <ActionMenu>

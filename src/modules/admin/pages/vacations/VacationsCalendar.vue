@@ -142,6 +142,20 @@ const calendarOptions = computed(() => ({
   margin-bottom: 15px;
 }
 
+.fc-button-group {
+  gap: 3px
+}
+
+.fc-direction-ltr .fc-button-group > .fc-button {
+  background-color: #07ae7c;
+  border-color: #07ae7c;
+}
+
+.fc-direction-ltr .fc-button-group > .fc-button:hover {
+  background-color: #197a2e;
+  border-color: #197a2e;
+}
+
 .today-vacations p, .month-vacations p {
   font-weight: bold;
   font-size: 1.1rem;

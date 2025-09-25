@@ -409,3 +409,37 @@ export const updateVacationRequest = async (vacationId, status) => {
         throw new Error(`Error updating vacation request: ${error}`)
     }
 }
+
+/**
+ * Get admins
+ *
+ * @returns {Promise<Array>} - Array of approved admins
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const getAllAdmins = async () => {
+    try {
+        return await api.get(`${domain}/Auth/GetAllAdmins`)
+    } catch (error) {
+        throw new Error(`Error getting admins: ${error}`)
+    }
+}
+
+/**
+ * Register admin to platform
+ *
+ * @param {Object} data
+ *
+ * @returns {Promise<Object>} - The registered admin object
+ *
+ * @throws {Error} - When the response status is not 200
+ */
+
+export const registerAdmin = async (data) => {
+    try {
+        return await api.post(`${domain}/Auth/RegisterAdmin`, data)
+    } catch (error) {
+        throw new Error(`Error registering admin: ${error}`)
+    }
+}

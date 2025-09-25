@@ -1,5 +1,5 @@
 <script setup>
-import { computed } from 'vue';
+import {computed, inject} from 'vue';
 import { getBookingsByUserId } from "@/modules/patientBookings/sdk/api.js";
 import { useQuery } from "@tanstack/vue-query";
 import { useUser } from "@/modules/auth/sdk/user.js";
@@ -61,10 +61,16 @@ const events = computed(() => {
       <strong>Price:</strong> ${booking.price || 'N/A'}€
     `
       },
+      allData: { ...booking }
     }));
   }
   return [];
 });
+
+const showDownloadAppointmentInfoPopup = inject('showDownloadAppointmentInfoPopup')
+const openDownloadAppointmentInfoPopup = (data) => {
+  showDownloadAppointmentInfoPopup({ ...data })
+}
 
 // FullCalendar options
 const calendarOptions = computed(() => ({
@@ -72,6 +78,11 @@ const calendarOptions = computed(() => ({
   initialView: 'dayGridMonth',
   events: events.value,
   dayMaxEventRows: true,
+  eventClick: ({ event }) => {
+    if (event._def.extendedProps.status === 3) {
+      openDownloadAppointmentInfoPopup(event._def.extendedProps.allData);
+    }
+  }
 }));
 </script>
 
@@ -129,7 +140,10 @@ const calendarOptions = computed(() => ({
         <template v-slot:eventContent="arg">
           <div
               class="calendar-event z-3"
-              :style="{ backgroundColor: statusColors[arg.event.extendedProps.status] }"
+              :style="{
+                backgroundColor: statusColors[arg.event.extendedProps.status],
+                cursor: arg.event.extendedProps.status === 3 ? 'pointer' : 'not-allowed'
+              }"
               v-tooltip.top.html="{ value: arg.event.extendedProps.tooltipHtml, escape: false }">
             <div class="calendar-event__title">{{ arg.event.extendedProps.doctor }}</div>
             <div class="calendar-event__time">
@@ -148,6 +162,20 @@ const calendarOptions = computed(() => ({
   padding: 15px;
   border-radius: 8px;
   margin-bottom: 15px;
+}
+
+.fc-button-group {
+  gap: 3px
+}
+
+.fc-direction-ltr .fc-button-group > .fc-button {
+  background-color: #07ae7c;
+  border-color: #07ae7c;
+}
+
+.fc-direction-ltr .fc-button-group > .fc-button:hover {
+  background-color: #197a2e;
+  border-color: #197a2e;
 }
 
 .today-appointments p, .month-appointments p {

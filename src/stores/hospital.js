@@ -5,6 +5,7 @@ export const useHospitalStore = defineStore('hospital', () => {
   const doctorSearchTerm = ref('')
   const departmentSearchTerm = ref('')
   const patientSearchTerm = ref('')
+  const adminSearchTerm = ref('')
 
   const currentPage = ref(0)
   const itemsPerPage = ref(7)
@@ -17,6 +18,7 @@ export const useHospitalStore = defineStore('hospital', () => {
     doctorSearchTerm,
     departmentSearchTerm,
     patientSearchTerm,
+    adminSearchTerm,
     currentPage,
     itemsPerPage,
     onPage

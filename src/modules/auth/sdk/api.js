@@ -34,7 +34,7 @@ export const registerPatient = async (data) => {
     try {
         return await api.post(`${domain}/Auth/RegisterPatient`, data)
     } catch (error) {
-        throw new Error(`Error logging in: ${error}`)
+        throw new Error(`Error registering patient: ${error}`)
     }
 }
 
