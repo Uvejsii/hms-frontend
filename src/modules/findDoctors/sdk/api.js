@@ -126,6 +126,8 @@ export const editDoctorReview = async (data) => {
  * Get available appointments for doctor by ID
  *
  * @param {Number} doctorId
+ * @param {Number} year
+ * @param {Number} month
  * @param {Number} day
  *
  * @returns {Promise<Array>} - Array of free appointments for the specified doctor
@@ -133,11 +135,13 @@ export const editDoctorReview = async (data) => {
  * @throws {Error} - When the response status is not 200
  */
 
-export const getAvailableAppointments = async (doctorId, day) => {
+export const getAvailableAppointments = async (doctorId, year, month, day) => {
     try {
         return await api.get(`${domain}/Booking/GetFreeBookingSlotsByDay`, {
             params: {
                 doctorId,
+                year,
+                month,
                 day
             }
         })

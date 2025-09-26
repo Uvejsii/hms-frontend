@@ -4,6 +4,7 @@ import { getAvailableAppointments } from "@/modules/findDoctors/sdk/api.js";
 import {formatDate, formatDateTo24Hour} from "@/utils/helpers.js";
 import moment from "moment";
 import {computed, inject, ref, watch} from "vue";
+import TableSkeleton from "@/components/TableSkeleton.vue";
 
 const props = defineProps(['data']);
 const today = moment().format('D');
@@ -11,10 +12,21 @@ const todayDate = moment().format('YYYY-MM-DD');
 
 const selectedDate = ref(null);
 
-const drAvailabilityKey = computed(() => ['doctorAvailability', props.data.id]);
+const drAvailabilityKey = computed(() => [
+  'doctorAvailability',
+  props.data.id,
+  selectedDate.value ? moment(selectedDate.value).format('YYYY-MM-DD') : todayDate
+]);
 const { data, isLoading, refetch } = useQuery({
   queryKey: drAvailabilityKey,
-  queryFn: () => getAvailableAppointments(props.data.id, selectedDate.value ? moment(selectedDate.value).format('D') : today),
+  queryFn: () => {
+    const date = selectedDate.value ? moment(selectedDate.value) : moment();
+    const year = date.year();
+    const month = date.month() + 1; // Months are zero-indexed in moment.js
+    const day = date.date();
+
+    return getAvailableAppointments(props.data.id, year, month, day);
+  },
 });
 
 watch(selectedDate, (newDate) => {
@@ -37,7 +49,11 @@ const bookAppointment = (data) => {
     </div>
 
     <h4>Schedule for {{ selectedDate ? formatDate(selectedDate) : todayDate }}</h4>
-    <div class="schedule-grid">
+    <TableSkeleton v-if="isLoading" rows="4" columns="10" />
+    <div v-if="!data || data?.length < 1" class="unavailable text-center my-5">
+      <p class="p-0">Doctor is not available at this date</p>
+    </div>
+    <div v-else class="schedule-grid">
       <div v-for="item in data" :key="item.start" class="schedule-day">
         <div class="day-name">{{ formatDateTo24Hour(item.start) }}</div>
         <div class="day-name">{{ formatDateTo24Hour(item.end) }}</div>

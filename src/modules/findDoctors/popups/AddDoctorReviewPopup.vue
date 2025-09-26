@@ -19,7 +19,7 @@ const {user} = useUser()
 const { validate, errors, values } = useForm({
   validationSchema: yup.object({
     doctorId: yup.number().required('Doctor is required'),
-    reviewerId: yup.string().required('Reviewer is required'),
+    reviewerId: yup.string().required('Login is required to add a review.'),
     stars: yup.number().min(1).required('Stars are required'),
     comment: yup.string().required('Review comment is required'),
   }),
@@ -102,6 +102,7 @@ const cancel = () => {
         <small class="form-grid__error">{{ errors[field.name] }}</small>
       </div>
     </form>
+    <small class="form-grid__error">{{ errors.reviewerId }}</small>
     <template #footer>
       <Button @click="cancel" severity="secondary" outlined>Cancel</Button>
       <Button @click="submitForm" :disabled="isPending">{{ isPending ? 'Adding...' : 'Add review' }}</Button>

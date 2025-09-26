@@ -41,7 +41,7 @@ const { validate, errors, values, setFieldValue } = useForm({
     price: yup.number().required('Price is required'),
     contactPhoneNumber: yup.string().required('Phone number is required'),
     doctorId: yup.number().required('Doctor is required'),
-    userId: yup.string().required('User is required'),
+    userId: yup.string().required('Login is required to book an appointment.'),
   }),
   initialValues: {
     date: new Date(),
@@ -55,12 +55,21 @@ const { validate, errors, values, setFieldValue } = useForm({
   }
 })
 
-const today = moment().format('D')
-
-const drAvailabilityKey = computed(() => ['doctorAvailability', props.data.id]);
+const drAvailabilityKey = computed(() => [
+  'doctorAvailability',
+  props.data.id,
+  values.date ? moment(values.date).format('YYYY-MM-DD') : moment().format('YYYY-MM-DD')
+]);
 const { data, isLoading, refetch } = useQuery({
   queryKey: drAvailabilityKey,
-  queryFn: () => getAvailableAppointments(props.data.id, values.date ? moment(values.date).format('D') : today),
+  queryFn: () => {
+    const date = values.date ? moment(values.date) : moment();
+    const year = date.year();
+    const month = date.month() + 1; // Months are zero-indexed in moment.js
+    const day = date.date();
+
+    return getAvailableAppointments(props.data.id, year, month, day);
+  },
 });
 
 watch(() => values.date, (newDate) => {
@@ -192,6 +201,7 @@ const cancel = () => {
         <small class="form-grid__error">{{ errors[field.name] }}</small>
       </div>
     </form>
+    <small class="form-grid__error">{{ errors.userId }}</small>
     <template #footer>
       <Button @click="cancel" severity="secondary" outlined>Cancel</Button>
       <Button @click="submitForm" :disabled="isPending"><CalendarPlus/>{{ isPending ? 'Booking...' : 'Book' }}</Button>
